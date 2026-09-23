@@ -92,7 +92,7 @@ export function Hero({ hero, figure, name }: Props) {
 
           <dl
             style={d(720)}
-            className="enter-rise mt-12 grid max-w-xl grid-cols-2 gap-x-8 gap-y-5 border-t border-line pt-6 font-mono text-xs"
+            className="enter-rise mt-12 grid max-w-xl grid-cols-1 gap-x-8 gap-y-4 border-t border-line pt-6 font-mono text-xs sm:grid-cols-2 sm:gap-y-5"
           >
             {hero.facts.map((f) => (
               <div key={f.label}>

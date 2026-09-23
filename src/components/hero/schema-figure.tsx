@@ -9,26 +9,10 @@ import {
   useTransform,
 } from "motion/react";
 import { useState, type CSSProperties, type PointerEvent } from "react";
+import type { Dictionary } from "@/content";
+import { schemaDimensions } from "@/content/shared";
 
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
-
-// The thesis warehouse: one fact table, twelve conformed dimensions.
-// Row counts from docs/bitacora_carga.md. Order places long names where
-// there is room for them (top, bottom, and near the vertical axis).
-const DIMS = [
-  { name: "programa_presupuestario", rows: 901, note: "Budget program" },
-  { name: "unidad_responsable", rows: 1926, note: "Responsible unit within a branch" },
-  { name: "ramo", rows: 50, note: "Administrative branch: ministry or agency" },
-  { name: "partida", rows: 459, note: "Object-of-expenditure line item" },
-  { name: "modalidad", rows: 23, note: "Program modality, by letter code" },
-  { name: "entidad_federativa", rows: 34, note: "State: geographic classification" },
-  { name: "actividad_institucional", rows: 375, note: "Institutional activity" },
-  { name: "fuente_financiamiento", rows: 6, note: "Funding source" },
-  { name: "finalidad", rows: 4, note: "Functional classification, level 1" },
-  { name: "funcion", rows: 28, note: "Functional classification, level 2" },
-  { name: "subfuncion", rows: 91, note: "Functional classification, level 3" },
-  { name: "tipo_gasto", rows: 9, note: "Type of expenditure" },
-];
 
 const CX = 280;
 const CY = 250;
@@ -39,7 +23,7 @@ const RY = 172;
 // breaks hydration; rounding keeps the SVG attributes identical on both.
 const round = (n: number) => Math.round(n * 100) / 100;
 
-const nodes = DIMS.map((d, i) => {
+const nodes = schemaDimensions.map((d, i) => {
   const angle = ((-90 + i * 30) * Math.PI) / 180;
   const x = round(CX + RX * Math.cos(angle));
   const y = round(CY + RY * Math.sin(angle));
@@ -80,7 +64,7 @@ function labelProps(side: string, x: number, y: number) {
   }
 }
 
-export function SchemaFigure() {
+export function SchemaFigure({ figure }: { figure: Dictionary["figure"] }) {
   const reduce = useReducedMotion();
   const [active, setActive] = useState<number | null>(null);
 
@@ -115,7 +99,7 @@ export function SchemaFigure() {
           </span>
           <span className="flex items-center gap-2">
             <span className="size-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" />
-            loaded · reconciled
+            {figure.status}
           </span>
         </div>
 
@@ -125,10 +109,8 @@ export function SchemaFigure() {
           role="img"
           aria-labelledby="schema-title schema-desc"
         >
-          <title id="schema-title">Star schema of the Mexican federal budget warehouse</title>
-          <desc id="schema-desc">
-            A central fact table, hecho_gasto, with 1,285,233 rows, joined to twelve dimension tables.
-          </desc>
+          <title id="schema-title">{figure.title}</title>
+          <desc id="schema-desc">{figure.description}</desc>
 
           <defs>
             <radialGradient id="core-glow" cx="50%" cy="50%" r="50%">
@@ -223,7 +205,7 @@ export function SchemaFigure() {
                   onBlur={() => setActive(null)}
                   tabIndex={0}
                   role="button"
-                  aria-label={`dim_${n.name}: ${n.rows.toLocaleString("en-US")} rows. ${n.note}`}
+                  aria-label={`dim_${n.name}: ${n.rows.toLocaleString("en-US")} ${figure.rows}. ${figure.notes[n.name]}`}
                   className="cursor-default outline-none"
                   style={{ opacity: dim ? 0.4 : 1, transition: "opacity 500ms var(--ease-soft)" }}
                 >
@@ -257,7 +239,7 @@ export function SchemaFigure() {
                     fontSize={9.5}
                     fill={on ? "var(--accent)" : "var(--subtle)"}
                   >
-                    {n.rows.toLocaleString("en-US")} rows
+                    {n.rows.toLocaleString("en-US")} {figure.rows}
                   </text>
                 </g>
               </g>
@@ -280,7 +262,7 @@ export function SchemaFigure() {
               hecho_gasto
             </text>
             <text x={CX} y={CY + 12} textAnchor="middle" className="font-mono" fontSize={10} fill="var(--accent)">
-              1,285,233 rows
+              1,285,233 {figure.rows}
             </text>
           </g>
         </svg>
@@ -296,12 +278,11 @@ export function SchemaFigure() {
             >
               {activeNode ? (
                 <>
-                  <span className="text-accent">dim_{activeNode.name}</span> · {activeNode.note}
+                  <span className="text-accent">dim_{activeNode.name}</span> · {figure.notes[activeNode.name]}
                 </>
               ) : (
                 <>
-                  <span className="text-fg-soft">Fig. 1</span> · Federal budget warehouse, 2020–2025. Twelve
-                  conformed dimensions around one fact table. Hover a node.
+                  <span className="text-fg-soft">Fig. 1</span> · {figure.caption}
                 </>
               )}
             </motion.span>

@@ -58,14 +58,15 @@ export function CountUp({
   const reduce = useReducedMotion();
   const format = (n: number) => Math.round(n).toLocaleString("en-US") + suffix;
 
+  // Automated readers rarely scroll: they keep the server-rendered final value.
   useEffect(() => {
-    if (!reduce && ref.current && !inView) ref.current.textContent = format(0);
+    if (!reduce && !navigator.webdriver && ref.current && !inView) ref.current.textContent = format(0);
     // Only on mount: hide the server-rendered final value until it animates.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (!inView || reduce) return;
+    if (!inView || reduce || navigator.webdriver) return;
     const controls = animate(0, value, {
       duration,
       ease: EASE,
@@ -181,7 +182,15 @@ export function Tabs({
 }
 
 /** Copies text to the clipboard and confirms inline. */
-export function CopyButton({ text, children }: { text: string; children: ReactNode }) {
+export function CopyButton({
+  text,
+  copiedLabel,
+  children,
+}: {
+  text: string;
+  copiedLabel: string;
+  children: ReactNode;
+}) {
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -207,7 +216,7 @@ export function CopyButton({ text, children }: { text: string; children: ReactNo
           transition={{ duration: 0.25 }}
           className="inline-flex items-center gap-2"
         >
-          {copied ? "Copied to clipboard" : children}
+          {copied ? copiedLabel : children}
         </motion.span>
       </AnimatePresence>
     </button>

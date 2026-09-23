@@ -12,7 +12,7 @@ type ViewTransitionDoc = {
  * Transitions API exists, the new theme expands as a circle from the button;
  * otherwise colours cross-fade.
  */
-export function ThemeToggle() {
+export function ThemeToggle({ label, title }: { label: string; title: string }) {
   const toggle = (e: MouseEvent<HTMLButtonElement>) => {
     const root = document.documentElement;
     const next = root.dataset.theme === "light" ? "dark" : "light";
@@ -61,8 +61,8 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      aria-label="Toggle light and dark theme"
-      title="Toggle theme"
+      aria-label={label}
+      title={title}
       className="lift-sm group relative grid size-9 place-items-center rounded-full border border-line bg-surface/80 text-muted hover:text-fg"
     >
       <Sun className="col-start-1 row-start-1 size-[17px] scale-50 rotate-90 opacity-0 transition-all duration-700 ease-soft dark:scale-100 dark:rotate-0 dark:opacity-100" />

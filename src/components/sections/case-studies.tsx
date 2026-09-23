@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { archive, caseStudies, type CaseStudy } from "@/content/projects";
+import type { Dictionary } from "@/content";
+import type { CaseStudy } from "@/content/types";
 import { ArrowUpRight, Lock } from "../ui/icons";
 import { SpotlightCard, Tabs } from "../ui/interactive";
 import { Tag } from "../ui/primitives";
@@ -9,7 +10,8 @@ function Panel({ children }: { children: ReactNode }) {
   return <div className="mt-5 min-h-[12.5rem] text-[14.5px] leading-relaxed text-pretty text-muted">{children}</div>;
 }
 
-function CaseStudyCard({ study }: { study: CaseStudy }) {
+function CaseStudyCard({ study, t }: { study: CaseStudy; t: Dictionary }) {
+  const ui = t.caseStudiesUi;
   return (
     <SpotlightCard as="article" className="flex h-full flex-col rounded-2xl border border-line bg-surface/50 p-6 sm:p-7">
       <div className="flex items-center justify-between gap-3 font-mono text-[11px] text-subtle">
@@ -21,14 +23,16 @@ function CaseStudyCard({ study }: { study: CaseStudy }) {
             rel="noopener noreferrer"
             className="group inline-flex shrink-0 items-center gap-1 rounded-full border border-line px-2.5 py-1 text-muted transition-colors duration-500 hover:border-accent/50 hover:text-accent"
           >
-            Repository
+            {ui.repository}
             <ArrowUpRight className="size-3 transition-transform duration-500 ease-soft group-hover:translate-x-px group-hover:-translate-y-px" />
-            <span className="sr-only">for {study.title} (opens in a new tab)</span>
+            <span className="sr-only">
+              {ui.forProject} {study.title} ({t.ui.opensNewTab})
+            </span>
           </a>
         ) : (
           <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line px-2.5 py-1">
             <Lock className="size-3" />
-            {study.privateNote ?? "Private"}
+            {study.privateNote}
           </span>
         )}
       </div>
@@ -41,10 +45,10 @@ function CaseStudyCard({ study }: { study: CaseStudy }) {
         listClassName="w-fit max-w-full"
         size="sm"
         items={[
-          { id: "problem", label: "Problem", content: <Panel>{study.problem}</Panel> },
+          { id: "problem", label: ui.tabs.problem, content: <Panel>{study.problem}</Panel> },
           {
             id: "architecture",
-            label: "Architecture",
+            label: ui.tabs.architecture,
             content: (
               <Panel>
                 <ul className="space-y-2.5">
@@ -60,7 +64,7 @@ function CaseStudyCard({ study }: { study: CaseStudy }) {
           },
           {
             id: "deployment",
-            label: "Deployment",
+            label: ui.tabs.deployment,
             content: (
               <Panel>
                 <p>{study.deployment}</p>
@@ -97,13 +101,13 @@ function CaseStudyCard({ study }: { study: CaseStudy }) {
   );
 }
 
-export function CaseStudies() {
+export function CaseStudies({ t }: { t: Dictionary }) {
   return (
     <>
       <RevealGroup className="mt-8 grid gap-5 md:grid-cols-2" stagger={0.1}>
-        {caseStudies.map((s) => (
+        {t.caseStudies.map((s) => (
           <RevealItem key={s.slug} className="h-full">
-            <CaseStudyCard study={s} />
+            <CaseStudyCard study={s} t={t} />
           </RevealItem>
         ))}
       </RevealGroup>
@@ -111,10 +115,10 @@ export function CaseStudies() {
       <Reveal className="mt-12">
         <div className="flex flex-col gap-4 border-t border-line pt-6 md:flex-row md:items-start md:gap-10">
           <p className="shrink-0 font-mono text-[11px] tracking-[0.16em] text-subtle uppercase md:w-40 md:pt-1">
-            Also on GitHub
+            {t.caseStudiesUi.alsoOnGithub}
           </p>
           <ul className="grid flex-1 gap-2 sm:grid-cols-3">
-            {archive.map((a) => (
+            {t.archive.map((a) => (
               <li key={a.name}>
                 <a
                   href={a.href}

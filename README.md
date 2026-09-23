@@ -20,12 +20,12 @@ All copy lives in `src/content/`, so text changes never touch components.
 |---|---|
 | `en.ts` | Every English string on the page |
 | `es.ts` | Every Spanish string. Must match `en.ts` field for field; a missing translation fails the build |
-| `shared.ts` | Language-neutral data: links (set LinkedIn or résumé to `null` to hide its button), credential URLs, thesis figures |
+| `shared.ts` | Language-neutral data: links (set LinkedIn to `null` to hide its button), credential URLs, thesis figures |
 | `structured-data.ts` | schema.org `Person` JSON-LD built from the dictionaries, for search engines and AI readers |
 
 In copy, `*text*` renders as emphasis where a component supports it (hero tagline, contact heading, deep-dive notes).
 
-To mark a thesis pipeline stage as done, change its `status` to `"built"` in both `en.ts` and `es.ts`. To add a certification, add it to `certifications` in both files. The résumé is served from `public/Rodrigo-Solbes-CV.pdf`; replace that file to update it.
+To mark a thesis pipeline stage as done, change its `status` to `"built"` in both `en.ts` and `es.ts`. To add a certification, add it to `certifications` in both files. Each language links its own CV (`contact.resumeHref`): `public/Rodrigo-Solbes-CV.pdf` for English and `public/Rodrigo-Solbes-CV-ES.pdf` for Spanish. Replace a file to update it; keep the public versions free of the phone number.
 
 The thesis numbers come from the thesis repository's own logs (`docs/bitacora_*.md`, `docs/pruebas_seguridad.md`, `experiments/salidas/conjunto_evaluacion.md`). Update them when those logs change.
 

@@ -251,7 +251,7 @@ export const en = {
     facts: [
       { label: "Focus", value: "Applied ML · Text-to-SQL" },
       { label: "Based in", value: "Tampico, MX · EN / ES" },
-      { label: "Open to", value: "Remote · Spain / EU relocation" },
+      { label: "Eligible to work", value: "Mexico · EU (Spanish citizen)" },
       { label: "Degree", value: "B.Eng. CompE · UAT ’27" },
     ],
   },
@@ -469,7 +469,7 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
   contact: {
     label: "Contact",
     title: "Let’s build systems people can *check*.",
-    body: "Open to software engineering and enterprise AI roles, internships and research collaborations, remote or with relocation to Spain and the EU. I reply in English or Spanish.",
+    body: "Open to software engineering and enterprise AI roles, internships and research collaborations, remote or on-site. As a Spanish citizen, I can work anywhere in the EU with no visa sponsorship. I reply in English or Spanish.",
     email: "Email me",
     resume: "Résumé (PDF)",
   },

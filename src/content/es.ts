@@ -250,7 +250,7 @@ export const es: Dictionary = {
     facts: [
       { label: "Enfoque", value: "ML aplicado · Text-to-SQL" },
       { label: "Ubicación", value: "Tampico, MX · ES / EN" },
-      { label: "Disponible", value: "Remoto · Reubicación a España / UE" },
+      { label: "Puedo trabajar en", value: "México · UE (ciudadano español)" },
       { label: "Carrera", value: "Ing. en Sistemas · UAT ’27" },
     ],
   },
@@ -469,7 +469,7 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
   contact: {
     label: "Contacto",
     title: "Construyamos sistemas que la gente pueda *comprobar*.",
-    body: "Abierto a puestos de ingeniería de software e IA empresarial, prácticas y colaboraciones de investigación, en remoto o con reubicación a España y la UE. Respondo en español o inglés.",
+    body: "Abierto a puestos de ingeniería de software e IA empresarial, prácticas y colaboraciones de investigación, en remoto o presencial. Como ciudadano español, puedo trabajar en cualquier país de la UE sin patrocinio de visa. Respondo en español o inglés.",
     email: "Escríbeme",
     resume: "CV (PDF, en inglés)",
   },

@@ -1,7 +1,8 @@
 // Language-neutral data shared by every locale: links, identifiers, numbers.
 
 export const links = {
-  email: "rsolbes@hotmail.com",
+  // Cloudflare Email Routing forwards this to the personal inbox.
+  email: "hola@rodrigosolbes.com",
   github: "https://github.com/rsolbes",
   // Set any of these to null to hide its button.
   linkedin: "https://www.linkedin.com/in/rsolbes/" as string | null,

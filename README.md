@@ -8,20 +8,26 @@ npm run dev      # http://localhost:3000
 npm run build    # production build + type check
 ```
 
+## Languages
+
+English is served at `/` and Spanish at `/es` (`src/app/[lang]`). `/en` redirects to `/`. Each page sets its own `<html lang>` and links to the other through `hreflang` alternates and the sitemap. The switch in the header keeps the reader at the same section.
+
 ## Editing content
 
 All copy lives in `src/content/`, so text changes never touch components.
 
 | File | What it holds |
 |---|---|
-| `site.ts` | Name, email, GitHub, LinkedIn, résumé path (set any link to `null` to hide its button) |
-| `thesis.ts` | Featured case study: metrics, pipeline stages and their build status, deep-dive tables |
-| `projects.ts` | Other case studies (problem / architecture / deployment) and the "Also on GitHub" row |
-| `experience.ts` | Timeline, recognition, certifications (with verification links), capabilities |
+| `en.ts` | Every English string on the page |
+| `es.ts` | Every Spanish string. Must match `en.ts` field for field; a missing translation fails the build |
+| `shared.ts` | Language-neutral data: links (set LinkedIn or résumé to `null` to hide its button), credential URLs, thesis figures |
+| `structured-data.ts` | schema.org `Person` JSON-LD built from the dictionaries, for search engines and AI readers |
 
-To mark a pipeline stage as done, change its `status` in `thesis.ts` to `"built"`. To add a certification, append to `certifications` with `status: "earned"`, a `date` and an optional `href`. The résumé is served from `public/Rodrigo-Solbes-CV.pdf`; replace that file to update it.
+In copy, `*text*` renders as emphasis where a component supports it (hero tagline, contact heading, deep-dive notes).
 
-The thesis numbers come from the thesis repository's own logs (`docs/bitacora_*.md`, `docs/pruebas_seguridad.md`, `experiments/salidas/conjunto_evaluacion.md`). Update them here when those logs change.
+To mark a thesis pipeline stage as done, change its `status` to `"built"` in both `en.ts` and `es.ts`. To add a certification, add it to `certifications` in both files. The résumé is served from `public/Rodrigo-Solbes-CV.pdf`; replace that file to update it.
+
+The thesis numbers come from the thesis repository's own logs (`docs/bitacora_*.md`, `docs/pruebas_seguridad.md`, `experiments/salidas/conjunto_evaluacion.md`). Update them when those logs change.
 
 ## Design system
 
@@ -40,7 +46,7 @@ Interaction primitives:
 - `.enter-*`: CSS-only entrances for above-the-fold content, so the hero appears on first paint without waiting for JavaScript.
 - `Tabs`, `CountUp`, `ShareBar`, theme toggle with a circular View Transition reveal.
 
-Every animation respects `prefers-reduced-motion`.
+Every animation respects `prefers-reduced-motion`. Automated browsers (`navigator.webdriver`) skip the scroll-triggered entrances so content is never left invisible to tools that don't scroll.
 
 ## Deploying
 

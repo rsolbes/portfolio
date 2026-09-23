@@ -1,13 +1,46 @@
 "use client";
 
 import { motion, useScroll, useSpring } from "motion/react";
-import { useEffect, useState } from "react";
-import { nav, site } from "@/content/site";
+import { useEffect, useState, type MouseEvent } from "react";
+import { links } from "@/content/shared";
+import type { Dictionary } from "@/content";
+import { localePath, type Locale } from "@/i18n/config";
 import { cn } from "@/lib/cn";
 import { ThemeToggle } from "./theme-toggle";
 import { GitHub } from "./ui/icons";
 
-export function SiteHeader() {
+type Props = {
+  lang: Locale;
+  name: string;
+  nav: Dictionary["nav"];
+  ui: Dictionary["ui"];
+};
+
+/** Switches to the other language, keeping the reader at the same section. */
+function LanguageToggle({ lang, label, aria }: { lang: Locale; label: string; aria: string }) {
+  const target: Locale = lang === "en" ? "es" : "en";
+  const href = localePath(target);
+  const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    window.location.assign(href + window.location.hash);
+  };
+  return (
+    <a
+      href={href}
+      hrefLang={target}
+      lang={target}
+      onClick={onClick}
+      aria-label={aria}
+      title={aria}
+      className="lift-sm grid h-9 min-w-9 place-items-center rounded-full border border-line bg-surface/80 px-2 font-mono text-[11px] font-semibold tracking-wider text-muted hover:text-fg"
+    >
+      {label}
+    </a>
+  );
+}
+
+export function SiteHeader({ lang, name, nav, ui }: Props) {
   const [active, setActive] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const { scrollYProgress } = useScroll();
@@ -39,7 +72,7 @@ export function SiteHeader() {
       observer.disconnect();
       window.removeEventListener("scroll", clearAtTop);
     };
-  }, []);
+  }, [nav]);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
@@ -50,7 +83,7 @@ export function SiteHeader() {
       />
       <div className="mx-auto max-w-6xl px-3 pt-3 sm:px-6">
         <nav
-          aria-label="Primary"
+          aria-label={ui.primaryNav}
           className={cn(
             "flex items-center justify-between gap-2 rounded-full border py-1.5 pr-1.5 pl-2 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-700 ease-soft",
             scrolled
@@ -58,21 +91,25 @@ export function SiteHeader() {
               : "border-transparent bg-transparent",
           )}
         >
-          <a href="#top" className="group flex items-center gap-2.5 rounded-full pr-2" aria-label={`${site.name}, back to top`}>
+          <a
+            href="#top"
+            className="group flex shrink-0 items-center gap-2.5 rounded-full pr-1 sm:pr-2"
+            aria-label={`${name}, ${ui.backToTopAria}`}
+          >
             <span className="grid size-8 place-items-center rounded-full border border-line-strong bg-surface font-mono text-[11px] font-semibold tracking-tight text-fg transition-colors duration-500 group-hover:border-accent group-hover:text-accent">
               RS
             </span>
-            <span className="hidden text-sm font-medium tracking-tight text-fg sm:inline">{site.name}</span>
+            <span className="hidden text-sm font-medium tracking-tight text-fg md:inline">{name}</span>
           </a>
 
-          <ul className="flex items-center gap-0.5">
+          <ul className="flex min-w-0 items-center gap-0.5">
             {nav.map((item) => (
               <li key={item.id}>
                 <a
                   href={`#${item.id}`}
                   aria-current={active === item.id ? "true" : undefined}
                   className={cn(
-                    "relative block rounded-full px-3 py-1.5 text-[13px] transition-colors duration-500 sm:px-3.5 sm:text-sm",
+                    "relative block rounded-full px-2.5 py-1.5 text-[13px] transition-colors duration-500 sm:px-3.5 sm:text-sm",
                     active === item.id ? "text-fg" : "text-muted hover:text-fg",
                   )}
                 >
@@ -89,17 +126,18 @@ export function SiteHeader() {
             ))}
           </ul>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex shrink-0 items-center gap-1.5">
             <a
-              href={site.github}
+              href={links.github}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="GitHub profile"
+              aria-label={ui.githubProfile}
               className="lift-sm hidden size-9 place-items-center rounded-full border border-line bg-surface/80 text-muted hover:text-fg sm:grid"
             >
               <GitHub className="size-4" />
             </a>
-            <ThemeToggle />
+            <LanguageToggle lang={lang} label={ui.languageSwitch.label} aria={ui.languageSwitch.aria} />
+            <ThemeToggle label={ui.themeToggle} title={ui.themeTitle} />
           </div>
         </nav>
       </div>

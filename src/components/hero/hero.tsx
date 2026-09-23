@@ -1,7 +1,9 @@
 "use client";
 
 import type { CSSProperties, PointerEvent } from "react";
-import { site } from "@/content/site";
+import type { Dictionary } from "@/content";
+import { links } from "@/content/shared";
+import { rich } from "@/lib/rich";
 import { ButtonLink, Container } from "../ui/primitives";
 import { GitHub } from "../ui/icons";
 import { SchemaFigure } from "./schema-figure";
@@ -9,9 +11,10 @@ import { SchemaFigure } from "./schema-figure";
 // Entrance timing for CSS-driven animations (see .enter-* in globals.css).
 const d = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
-const NAME = site.name.split(" ");
+type Props = { hero: Dictionary["hero"]; figure: Dictionary["figure"]; name: string };
 
-export function Hero() {
+export function Hero({ hero, figure, name }: Props) {
+  const words = name.split(" ");
   const onMove = (e: PointerEvent<HTMLElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
     e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
@@ -44,15 +47,15 @@ export function Hero() {
                 <span className="absolute inset-0 animate-ping rounded-full bg-accent opacity-60 motion-reduce:animate-none" />
                 <span className="relative size-1.5 rounded-full bg-accent" />
               </span>
-              Now
+              {hero.nowBadge}
             </span>
-            <span className="truncate">Thesis: Spanish questions → SQL over public budget data</span>
+            <span className="truncate">{hero.nowText}</span>
           </a>
 
           <h1 className="mt-7 text-[clamp(2.9rem,8.2vw,5.6rem)] leading-[0.94] font-semibold tracking-[-0.045em] text-fg">
-            <span className="sr-only">{site.name}</span>
+            <span className="sr-only">{name}</span>
             <span aria-hidden className="flex flex-wrap gap-x-[0.24em]">
-              {NAME.map((word, i) => (
+              {words.map((word, i) => (
                 <span key={word} className="inline-block overflow-hidden pb-[0.08em]">
                   <span className="enter-mask inline-block" style={d(150 + i * 90)}>
                     {word}
@@ -66,50 +69,42 @@ export function Hero() {
             style={d(400)}
             className="enter-rise mt-6 max-w-xl text-[1.35rem] leading-snug font-medium tracking-[-0.015em] text-balance text-fg-soft sm:text-[1.6rem]"
           >
-            Engineering software and AI systems{" "}
-            <em className="font-serif font-normal text-accent italic">you can verify.</em>
+            {rich(hero.tagline, "font-serif font-normal text-accent italic")}
           </p>
 
           <p
             style={d(500)}
             className="enter-rise mt-5 max-w-xl text-[15px] leading-relaxed text-pretty text-muted sm:text-base"
           >
-            Computer Engineering student and Systems Auxiliary in {site.location}, with three years across
-            software, data and IT infrastructure. I ship production machine learning inside an enterprise .NET
-            ERP, and I’m moving into Software Engineering and Enterprise AI, building systems where every answer
-            shows its evidence.
+            {hero.intro}
           </p>
 
           <div style={d(600)} className="enter-rise mt-9 flex flex-wrap items-center gap-3">
-            <ButtonLink href="#work">Read the case studies</ButtonLink>
-            <ButtonLink href={site.github} variant="secondary" external icon="none">
+            <ButtonLink href="#work">{hero.ctaPrimary}</ButtonLink>
+            <ButtonLink href={links.github} variant="secondary" external icon="none">
               <GitHub className="size-4" />
               GitHub
             </ButtonLink>
             <ButtonLink href="#contact" variant="ghost">
-              Get in touch
+              {hero.ctaContact}
             </ButtonLink>
           </div>
 
           <dl
             style={d(720)}
-            className="enter-rise mt-12 grid max-w-xl grid-cols-1 gap-x-8 gap-y-4 border-t border-line pt-6 font-mono text-xs sm:grid-cols-3"
+            className="enter-rise mt-12 grid max-w-xl grid-cols-2 gap-x-8 gap-y-5 border-t border-line pt-6 font-mono text-xs"
           >
-            {[
-              ["Focus", "Applied ML · Text-to-SQL"],
-              ["Base", `${site.location.split(",")[0]} · EN / ES`],
-              ["Degree", "B.Eng. CompE · UAT ’27"],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <dt className="tracking-[0.18em] text-subtle uppercase">{k}</dt>
-                <dd className="mt-1.5 text-fg-soft">{v}</dd>
+            {hero.facts.map((f) => (
+              <div key={f.label}>
+                <dt className="tracking-[0.18em] text-subtle uppercase">{f.label}</dt>
+                <dd className="mt-1.5 text-fg-soft">{f.value}</dd>
               </div>
             ))}
           </dl>
         </div>
 
         <div className="enter-rise lg:col-span-5" style={d(350)}>
-          <SchemaFigure />
+          <SchemaFigure figure={figure} />
         </div>
       </Container>
     </section>

@@ -2,13 +2,13 @@
 
 import { motion, useScroll, useSpring } from "motion/react";
 import { useRef } from "react";
-import { timeline } from "@/content/experience";
+import type { TimelineEntry } from "@/content/types";
 import { cn } from "@/lib/cn";
 import { Tag } from "../ui/primitives";
 import { RevealGroup, RevealItem } from "../ui/reveal";
 
 /** Vertical timeline whose rail fills in as you scroll through it. */
-export function Timeline() {
+export function Timeline({ timeline, nowLabel }: { timeline: TimelineEntry[]; nowLabel: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 75%", "end 55%"] });
   const fill = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
@@ -38,7 +38,7 @@ export function Timeline() {
               {e.period}
               {e.current ? (
                 <span className="rounded-full bg-accent/12 px-2 py-0.5 tracking-normal text-accent normal-case">
-                  now
+                  {nowLabel}
                 </span>
               ) : null}
             </p>

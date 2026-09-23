@@ -1,10 +1,13 @@
-import { site } from "@/content/site";
+import type { Dictionary } from "@/content";
+import { links } from "@/content/shared";
+import { rich } from "@/lib/rich";
 import { Copy, FileText, GitHub, LinkedIn, Mail } from "../ui/icons";
 import { CopyButton } from "../ui/interactive";
 import { ButtonLink, Container } from "../ui/primitives";
 import { Reveal } from "../ui/reveal";
 
-export function Contact() {
+export function Contact({ t }: { t: Dictionary }) {
+  const c = t.contact;
   return (
     <section id="contact" className="relative border-t border-line py-24 sm:py-32">
       <Container>
@@ -18,40 +21,37 @@ export function Contact() {
             <p className="flex items-center gap-3 font-mono text-xs text-subtle">
               <span className="text-accent">§04</span>
               <span className="h-px w-8 bg-line-strong" />
-              <span className="tracking-[0.2em] uppercase">Contact</span>
+              <span className="tracking-[0.2em] uppercase">{c.label}</span>
             </p>
 
             <h2 className="mt-6 max-w-3xl text-[clamp(2rem,5vw,3.6rem)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance text-fg">
-              Let’s build systems people can <em className="font-serif font-normal text-accent italic">check</em>.
+              {rich(c.title, "font-serif font-normal text-accent italic")}
             </h2>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-pretty text-muted">
-              Open to conversations about software engineering and enterprise AI roles, internships and research
-              collaborations. I reply in English or Spanish.
-            </p>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-pretty text-muted">{c.body}</p>
 
             <div className="mt-10 flex flex-wrap items-center gap-3">
-              <ButtonLink href={`mailto:${site.email}`} icon="none">
+              <ButtonLink href={`mailto:${links.email}`} icon="none">
                 <Mail className="size-4" />
-                Email me
+                {c.email}
               </ButtonLink>
-              <CopyButton text={site.email}>
+              <CopyButton text={links.email} copiedLabel={t.ui.copied}>
                 <Copy className="size-3.5" />
-                {site.email}
+                {links.email}
               </CopyButton>
-              <ButtonLink href={site.github} variant="secondary" external icon="external">
+              <ButtonLink href={links.github} variant="secondary" external icon="external">
                 <GitHub className="size-4" />
                 GitHub
               </ButtonLink>
-              {site.linkedin ? (
-                <ButtonLink href={site.linkedin} variant="secondary" external icon="external">
+              {links.linkedin ? (
+                <ButtonLink href={links.linkedin} variant="secondary" external icon="external">
                   <LinkedIn className="size-4" />
                   LinkedIn
                 </ButtonLink>
               ) : null}
-              {site.resume ? (
-                <ButtonLink href={site.resume} variant="secondary" external icon="external">
+              {links.resume ? (
+                <ButtonLink href={links.resume} variant="secondary" external icon="external">
                   <FileText className="size-4" />
-                  Résumé (PDF)
+                  {c.resume}
                 </ButtonLink>
               ) : null}
             </div>

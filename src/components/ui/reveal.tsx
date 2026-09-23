@@ -1,8 +1,21 @@
 "use client";
 
 import { motion, type Variants } from "motion/react";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { EASE } from "@/lib/cn";
+
+/**
+ * True in automated browsers (headless renderers, AI readers, recruiting
+ * tools). They rarely scroll, so scroll-triggered entrances would leave
+ * content invisible to them; for these visitors content is shown at once.
+ */
+export function useAutomated() {
+  const [automated, setAutomated] = useState(false);
+  useEffect(() => {
+    if (navigator.webdriver) setAutomated(true);
+  }, []);
+  return automated;
+}
 
 const item: Variants = {
   hidden: { opacity: 0, y: 18, filter: "blur(6px)" },
@@ -36,14 +49,16 @@ export function Reveal({
   className?: string;
   delay?: number;
 }) {
+  const automated = useAutomated();
   return (
     <motion.div
       className={className}
       initial="hidden"
       whileInView="show"
+      animate={automated ? "show" : undefined}
       viewport={{ once: true, margin: "-80px" }}
       variants={single}
-      custom={delay}
+      custom={automated ? 0 : delay}
     >
       {children}
     </motion.div>
@@ -64,14 +79,19 @@ export function RevealGroup({
   delay?: number;
   as?: "div" | "ul" | "ol" | "dl";
 }) {
+  const automated = useAutomated();
   const Tag = motion[as];
   return (
     <Tag
       className={className}
       initial="hidden"
       whileInView="show"
+      animate={automated ? "show" : undefined}
       viewport={{ once: true, margin: "-80px" }}
-      variants={{ hidden: {}, show: { transition: { staggerChildren: stagger, delayChildren: delay } } }}
+      variants={{
+        hidden: {},
+        show: { transition: automated ? {} : { staggerChildren: stagger, delayChildren: delay } },
+      }}
     >
       {children}
     </Tag>

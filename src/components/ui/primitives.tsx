@@ -103,9 +103,3 @@ export function StatusDot({ status }: { status: "built" | "in-progress" | "plann
     );
   return <span className="size-2 rounded-full border border-dashed border-subtle" aria-hidden />;
 }
-
-export const statusLabel = {
-  built: "Built",
-  "in-progress": "In progress",
-  planned: "Planned",
-} as const;

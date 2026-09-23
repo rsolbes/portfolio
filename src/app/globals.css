@@ -1,0 +1,405 @@
+@import "tailwindcss";
+
+/* Theme is driven by <html data-theme="dark|light">, set before paint by the
+   inline script in layout.tsx. Dark is the default. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------------
+   Tokens
+   Light: a crisp technical whitepaper. Dark: deep slate with azure accents.
+   --accent-glow is an RGB triplet so it can be used with any alpha.
+   ------------------------------------------------------------------------ */
+:root {
+  --bg: #ffffff;
+  --bg-elevated: #ffffff;
+  --surface: #f8f9fb;
+  --surface-2: #f0f2f6;
+  --line: #e4e7ed;
+  --line-strong: #cdd3dd;
+  --fg: #090d15;
+  --fg-soft: #1d2430;
+  --muted: #4a5465;
+  --subtle: #687386;
+  --accent: #0061df;
+  --accent-strong: #004cb0;
+  --accent-contrast: #ffffff;
+  --accent-glow: 0 97 223;
+  --grid-line: rgb(9 13 21 / 0.05);
+  --shadow-lift:
+    0 1px 2px rgb(16 24 40 / 0.04), 0 26px 50px -18px rgb(16 24 40 / 0.2),
+    0 0 0 1px rgb(0 97 223 / 0.16);
+  --shadow-lift-sm: 0 10px 24px -10px rgb(0 97 223 / 0.45);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0a0f1a;
+  --bg-elevated: #0e1522;
+  --surface: #0f1625;
+  --surface-2: #151e30;
+  --line: rgb(148 163 184 / 0.11);
+  --line-strong: rgb(148 163 184 / 0.2);
+  --fg: #e7ebf2;
+  --fg-soft: #cbd3df;
+  --muted: #98a3b6;
+  --subtle: #7a869b;
+  --accent: #3d9dff;
+  --accent-strong: #79bcff;
+  --accent-contrast: #031022;
+  --accent-glow: 61 157 255;
+  --grid-line: rgb(148 163 184 / 0.055);
+  --shadow-lift:
+    inset 0 1px 0 rgb(255 255 255 / 0.05), 0 30px 60px -22px rgb(0 0 0 / 0.75),
+    0 0 0 1px rgb(61 157 255 / 0.22), 0 18px 64px -14px rgb(61 157 255 / 0.18);
+  --shadow-lift-sm: 0 12px 30px -10px rgb(61 157 255 / 0.55);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-elevated: var(--bg-elevated);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-fg-soft: var(--fg-soft);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-contrast: var(--accent-contrast);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ------------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--bg);
+    color: var(--fg);
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: rgb(var(--accent-glow) / 0.25);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+}
+
+/* ------------------------------------------------------------------------
+   Tactile elevation: slow, soft "pop-out" on hover.
+   Only on devices with a real hover so touch taps don't stick mid-lift.
+   ------------------------------------------------------------------------ */
+@layer components {
+  /* Grids default to one column that can shrink below its content's
+     min-content width, so long nowrap text can't widen the page on phones.
+     grid-cols-* utilities (including responsive ones) still override this. */
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lift,
+  .lift-sm {
+    transition:
+      transform 650ms var(--ease-soft),
+      box-shadow 650ms var(--ease-soft),
+      border-color 650ms var(--ease-soft),
+      background-color 650ms var(--ease-soft),
+      color 400ms var(--ease-soft);
+    will-change: transform;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .lift:hover {
+      transform: translateY(-5px) scale(1.012);
+      box-shadow: var(--shadow-lift);
+      border-color: color-mix(in oklab, var(--accent) 32%, var(--line));
+    }
+    .lift-sm:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: var(--shadow-lift-sm);
+    }
+  }
+
+  .lift-sm:active {
+    transform: translateY(0) scale(0.985);
+    transition-duration: 150ms;
+  }
+
+  /* Cursor-following light and border highlight for cards.
+     --mx / --my are set by <SpotlightCard>. */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+  .spotlight::before,
+  .spotlight::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 700ms var(--ease-soft);
+  }
+  .spotlight::before {
+    z-index: -1;
+    background: radial-gradient(
+      480px circle at var(--mx, 50%) var(--my, 50%),
+      rgb(var(--accent-glow) / 0.09),
+      transparent 45%
+    );
+  }
+  .spotlight::after {
+    padding: 1px;
+    background: radial-gradient(
+      320px circle at var(--mx, 50%) var(--my, 50%),
+      rgb(var(--accent-glow) / 0.55),
+      transparent 42%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .spotlight:hover::before,
+    .spotlight:hover::after {
+      opacity: 1;
+    }
+  }
+
+  /* Blueprint grid, faded out toward the edges. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: center top;
+  }
+  .mask-fade-top {
+    -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 0%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 75% 65% at 50% 0%, #000 35%, transparent 100%);
+  }
+
+  /* Slow-drifting azure light behind the hero. */
+  .aurora {
+    background:
+      radial-gradient(38% 48% at 32% 42%, rgb(var(--accent-glow) / 0.22), transparent 70%),
+      radial-gradient(34% 42% at 70% 30%, rgb(var(--accent-glow) / 0.13), transparent 70%),
+      radial-gradient(30% 38% at 52% 72%, rgb(0 200 255 / 0.07), transparent 70%);
+    filter: blur(48px);
+    animation: aurora-drift 28s var(--ease-soft) infinite alternate;
+  }
+  [data-theme="light"] .aurora {
+    opacity: 0.5;
+  }
+
+  /* Pointer-tracked glow inside the hero. */
+  .hero-spotlight {
+    background: radial-gradient(
+      600px circle at var(--mx, 60%) var(--my, 30%),
+      rgb(var(--accent-glow) / 0.07),
+      transparent 60%
+    );
+  }
+
+  /* Film grain for depth in dark mode; light mode stays paper-clean. */
+  [data-theme="dark"] .grain::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Animated flow along diagram connectors. */
+  .flow-x,
+  .flow-y {
+    position: relative;
+    overflow: hidden;
+  }
+  .flow-x::after,
+  .flow-y::after {
+    content: "";
+    position: absolute;
+    background: linear-gradient(var(--flow-dir, 90deg), transparent, var(--accent), transparent);
+    opacity: 0.9;
+  }
+  .flow-x::after {
+    inset: 0 auto 0 0;
+    width: 40%;
+    animation: flow-x 2.8s var(--ease-soft) infinite;
+  }
+  .flow-y::after {
+    --flow-dir: 180deg;
+    inset: 0 0 auto 0;
+    height: 40%;
+    animation: flow-y 2.8s var(--ease-soft) infinite;
+  }
+  .flow-idle::after {
+    display: none;
+  }
+
+  .orbit {
+    transform-box: view-box;
+    transform-origin: 280px 250px;
+    animation: spin 140s linear infinite;
+  }
+  .orbit-reverse {
+    animation-direction: reverse;
+    animation-duration: 200s;
+  }
+}
+
+/* Above-the-fold entrances run in CSS so they start on first paint, without
+   waiting for hydration. Stagger with --d. Only the "from" state lives in
+   the keyframes, so with animations disabled everything is simply visible. */
+@layer components {
+  .enter-rise {
+    animation: rise 900ms var(--ease-soft) var(--d, 0ms) backwards;
+  }
+  .enter-mask {
+    animation: mask-up 1100ms var(--ease-soft) var(--d, 0ms) backwards;
+  }
+  .enter-fade {
+    animation: fade-in 700ms var(--ease-soft) var(--d, 0ms) backwards;
+  }
+  .enter-draw {
+    stroke-dasharray: 1;
+    animation: draw 1200ms var(--ease-soft) var(--d, 0ms) backwards;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(6px);
+  }
+}
+
+@keyframes mask-up {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Smooth colour cross-fade when the View Transitions API is unavailable. */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    background-color 450ms var(--ease-soft),
+    color 450ms var(--ease-soft),
+    border-color 450ms var(--ease-soft),
+    fill 450ms var(--ease-soft),
+    stroke 450ms var(--ease-soft) !important;
+}
+
+/* The theme toggle drives its own circular reveal. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-46%, 24px, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(-54%, -12px, 0) scale(0.97);
+  }
+}
+
+@keyframes flow-x {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(260%);
+  }
+}
+
+@keyframes flow-y {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(260%);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .lift,
+  .lift-sm {
+    transition-duration: 1ms;
+  }
+  .lift:hover,
+  .lift-sm:hover {
+    transform: none;
+  }
+  .aurora,
+  .orbit,
+  .flow-x::after,
+  .flow-y::after,
+  .enter-rise,
+  .enter-mask,
+  .enter-fade,
+  .enter-draw {
+    animation: none;
+  }
+}

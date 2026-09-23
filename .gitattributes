@@ -1,0 +1,12 @@
+# Source files are stored with LF endings on every platform.
+* text=auto eol=lf
+
+# Never touch the bytes of binary assets.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary

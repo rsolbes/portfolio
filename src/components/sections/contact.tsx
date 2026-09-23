@@ -48,8 +48,8 @@ export function Contact({ t }: { t: Dictionary }) {
                   LinkedIn
                 </ButtonLink>
               ) : null}
-              {links.resume ? (
-                <ButtonLink href={links.resume} variant="secondary" external icon="external">
+              {c.resumeHref ? (
+                <ButtonLink href={c.resumeHref} variant="secondary" external icon="external">
                   <FileText className="size-4" />
                   {c.resume}
                 </ButtonLink>

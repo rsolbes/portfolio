@@ -472,6 +472,8 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
     body: "Open to software engineering and enterprise AI roles, internships and research collaborations, remote or on-site. As a Spanish citizen, I can work anywhere in the EU with no visa sponsorship. I reply in English or Spanish.",
     email: "Email me",
     resume: "Résumé (PDF)",
+    // Served from public/. Set to null to hide the button.
+    resumeHref: "/Rodrigo-Solbes-CV.pdf" as string | null,
   },
   footer: {
     colophon: "Set in Geist, Geist Mono and Newsreader. Built with Next.js, Tailwind CSS and Motion.",

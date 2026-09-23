@@ -29,8 +29,12 @@ export function personJsonLd(t: Dictionary, lang: Locale) {
       { "@type": "CollegeOrUniversity", name: "Universidad Autónoma de Tamaulipas" },
       { "@type": "CollegeOrUniversity", name: "Universidad de Burgos" },
     ],
-    // EU citizenship: eligible to work across the EU without sponsorship.
-    nationality: { "@type": "Country", name: "Spain" },
+    // Dual Spanish (EU) and Mexican citizen: eligible to work across the EU
+    // without sponsorship.
+    nationality: [
+      { "@type": "Country", name: "Spain" },
+      { "@type": "Country", name: "Mexico" },
+    ],
     knowsLanguage: ["en", "es"],
     knowsAbout: t.experience.capabilities.flatMap((c) => c.items),
     hasCredential: t.experience.certifications.map((c) => ({

@@ -74,6 +74,31 @@ const caseStudies: CaseStudy[] = [
     ],
   },
   {
+    slug: "finance-coach",
+    title: "Finance Coach: coach financiero con IA",
+    kicker: "Agente de IA · Proyecto personal",
+    period: "oct 2026",
+    visibility: "public",
+    repo: links.financeCoachRepo,
+    summary:
+      "PWA de finanzas personales con un coach basado en Claude que organiza los pagos según cada día de nómina, pensada para cómo funciona el dinero en México: pago semanal, meses sin intereses y fechas de corte.",
+    problem:
+      "Las apps de los bancos muestran saldos, pero no dicen si los pagos del mes caben en los sueldos del mes. Con nómina semanal, varias tarjetas, MSI y préstamos pequeños, la pregunta real es de tiempos: qué vence antes del próximo pago y qué parte de cada saldo de tarjeta hay que liquidar completa para no pagar intereses.",
+    architecture: [
+      "Agente con herramientas: Claude en un ciclo con streaming y 15 herramientas para consultar cuentas, flujo de efectivo y gastos, calcular y actuar (registrar un pago, actualizar un saldo, guardar una meta). Las conversaciones solo se agregan, nunca se editan, lo que mantiene efectivo el caché de prompts.",
+      "Todas las cuentas en código: un motor con pruebas calcula la fecha límite de pago de cada tarjeta a partir de su fecha de corte, separa los MSI del saldo que debe pagarse completo y lleva el saldo de efectivo a través de cada día de pago. El modelo nunca hace aritmética: usa una herramienta de cálculo.",
+      "Lectura de estados de cuenta y comprobantes en PDF, capturas de pantalla o CSV, con salida estructurada validada por esquema. Las capturas que se traslapan se deduplican en una sola solicitud y cada movimiento se revisa antes de guardarse.",
+    ],
+    deployment:
+      "PWA instalable en Next.js 16 con Server Actions, desplegada en Vercel con una base de datos Turso (libSQL). La protege un código de acceso de un solo usuario con bloqueo por IP y global. Los datos personales nunca entran al repositorio y las pruebas usan datos ficticios.",
+    stack: ["TypeScript", "Next.js 16", "React 19", "Claude API", "Zod", "Turso · libSQL", "Tailwind CSS"],
+    facts: [
+      { value: "15", label: "herramientas del agente" },
+      { value: "27", label: "pruebas automatizadas" },
+      { value: "3", label: "formatos de entrada" },
+    ],
+  },
+  {
     slug: "casita-azul",
     title: "Plataforma inmobiliaria Casita Azul",
     kicker: "Full-stack · Proyecto para cliente",

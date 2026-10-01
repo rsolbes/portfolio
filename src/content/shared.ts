@@ -7,6 +7,7 @@ export const links = {
   // Set to null to hide its button. The résumé path is per language (en.ts / es.ts).
   linkedin: "https://www.linkedin.com/in/rsolbes/" as string | null,
   thesisRepo: "https://github.com/rsolbes/presupuesto-nlq-mx",
+  financeCoachRepo: "https://github.com/rsolbes/finance-coach",
   osSimulatorsRepo: "https://github.com/rsolbes/Producto_Integrador_SO",
   posRepo: "https://github.com/rsolbes/proyecto_pos",
   smartHomeRepo: "https://github.com/rsolbes/app_casita",

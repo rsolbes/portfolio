@@ -74,6 +74,31 @@ const caseStudies: CaseStudy[] = [
     ],
   },
   {
+    slug: "finance-coach",
+    title: "Finance Coach: AI Money Coach",
+    kicker: "AI agent · Personal project",
+    period: "Oct 2026",
+    visibility: "public",
+    repo: links.financeCoachRepo,
+    summary:
+      "A personal finance PWA with a Claude-powered coach that plans payments paycheck by paycheck, built around how money works in Mexico: weekly pay, MSI installments and card statement cycles.",
+    problem:
+      "Banking apps show balances, not whether this month’s payments fit this month’s paychecks. With weekly pay, several cards, interest-free installments and small loans, the real question is about timing: what’s due before the next payday, and which part of each card balance must be paid in full to avoid interest.",
+    architecture: [
+      "Tool-using agent: Claude in a streaming loop with 15 tools to read accounts, cash flow and spending, calculate, and act (record a payment, update a balance, save a goal). Conversations are append-only, which keeps prompt caching effective.",
+      "All math in code: a tested engine derives each card’s due date from its statement day, separates installments from the balance that must be paid in full, and runs a cash balance through every payday. The model never does arithmetic; it calls a calculate tool.",
+      "Statement and receipt extraction from PDFs, phone screenshots or CSV, with schema-validated structured output. Overlapping screenshots are deduplicated in one request, and every row is reviewed before it’s saved.",
+    ],
+    deployment:
+      "An installable PWA on Next.js 16 with Server Actions, deployed to Vercel with a Turso (libSQL) database. A single-user passcode with per-IP and global lockouts protects it. Personal data never enters the repository, and the tests run on made-up fixtures.",
+    stack: ["TypeScript", "Next.js 16", "React 19", "Claude API", "Zod", "Turso · libSQL", "Tailwind CSS"],
+    facts: [
+      { value: "15", label: "agent tools" },
+      { value: "27", label: "automated tests" },
+      { value: "3", label: "input formats" },
+    ],
+  },
+  {
     slug: "casita-azul",
     title: "Casita Azul Real-Estate Platform",
     kicker: "Full-stack · Client project",

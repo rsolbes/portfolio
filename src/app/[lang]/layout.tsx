@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import { notFound } from "next/navigation";
@@ -79,6 +80,7 @@ export default async function RootLayout({ children, params }: Props) {
       </head>
       <body className="grain bg-bg font-sans text-fg antialiased">
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );

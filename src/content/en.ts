@@ -74,31 +74,6 @@ const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    slug: "finance-coach",
-    title: "Finance Coach: AI Money Coach",
-    kicker: "AI agent · Personal project",
-    period: "Oct 2026",
-    visibility: "public",
-    repo: links.financeCoachRepo,
-    summary:
-      "A personal finance PWA with a Claude-powered coach that plans payments paycheck by paycheck, built around how money works in Mexico: weekly pay, MSI installments and card statement cycles.",
-    problem:
-      "Banking apps show balances, not whether this month’s payments fit this month’s paychecks. With weekly pay, several cards, interest-free installments and small loans, the real question is about timing: what’s due before the next payday, and which part of each card balance must be paid in full to avoid interest.",
-    architecture: [
-      "Tool-using agent: Claude in a streaming loop with 15 tools to read accounts, cash flow and spending, calculate, and act (record a payment, update a balance, save a goal). Conversations are append-only, which keeps prompt caching effective.",
-      "All math in code: a tested engine derives each card’s due date from its statement day, separates installments from the balance that must be paid in full, and runs a cash balance through every payday. The model never does arithmetic; it calls a calculate tool.",
-      "Statement and receipt extraction from PDFs, phone screenshots or CSV, with schema-validated structured output. Overlapping screenshots are deduplicated in one request, and every row is reviewed before it’s saved.",
-    ],
-    deployment:
-      "An installable PWA on Next.js 16 with Server Actions, deployed to Vercel with a Turso (libSQL) database. A single-user passcode with per-IP and global lockouts protects it. Personal data never enters the repository, and the tests run on made-up fixtures.",
-    stack: ["TypeScript", "Next.js 16", "React 19", "Claude API", "Zod", "Turso · libSQL", "Tailwind CSS"],
-    facts: [
-      { value: "15", label: "agent tools" },
-      { value: "27", label: "automated tests" },
-      { value: "3", label: "input formats" },
-    ],
-  },
-  {
     slug: "casita-azul",
     title: "Casita Azul Real-Estate Platform",
     kicker: "Full-stack · Client project",
@@ -433,6 +408,93 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
         "What share of unanswerable questions does the system recognize as such?",
       ],
     },
+  },
+  financeCoach: {
+    featured: "Featured · AI agent",
+    context: "Personal project",
+    period: "Oct 2026",
+    status: "Live",
+    name: "finance-coach",
+    headline:
+      "An AI money coach that plans every payment around every paycheck, and leaves the arithmetic to tested code.",
+    viewRepo: "View repository",
+    labels: {
+      app: "The app",
+      problem: "Problem",
+      approach: "Approach",
+      agent: "How the agent works",
+      decisions: "Engineering decisions",
+    },
+    screens: [
+      { id: "coach", label: "Coach", alt: "The coach planning payments paycheck by paycheck, with amounts and dates" },
+      {
+        id: "dashboard",
+        label: "Dashboard",
+        alt: "Dashboard with cash available, upcoming payments with a running balance, and the months ahead",
+      },
+      { id: "statement", label: "Statement import", alt: "Transactions read from a bank statement, ready to review before saving" },
+      { id: "spending", label: "Spending", alt: "Spending by category, top merchants and the transaction list" },
+    ],
+    phoneAlt: "The dashboard on a phone, installed as an app",
+    screensNote: "Screenshots use made-up data.",
+    problem:
+      "Banking apps show balances, not whether this month’s payments fit this month’s paychecks. With weekly pay, several cards, interest-free installments (MSI) and small loans, the real question is about timing: what’s due before the next payday, and which part of each card balance must be paid in full to avoid interest.",
+    approach:
+      "A chat coach backed by Claude that looks up the user’s real accounts, plans and transactions through tools, and can act on them, while every number it quotes comes from a deterministic engine. Bank statements and payment receipts come in as PDFs or phone screenshots and become reviewed transactions.",
+    metrics: [
+      { value: 15, suffix: "", label: "agent tools to read, calculate and act" },
+      { value: 27, suffix: "", label: "automated tests on the engine and tools" },
+      { value: 3, suffix: "", label: "input formats: PDF, screenshot, CSV" },
+      { value: 2, suffix: "", label: "reply languages: Spanish and English" },
+    ],
+    agent: {
+      ask: { title: "You ask", detail: "“Plan my next 4 paychecks”" },
+      model: { title: "Claude", detail: "Streaming tool loop with adaptive thinking" },
+      answer: { title: "Answer", detail: "Streamed back; every figure comes from a tool" },
+      toolsTitle: "15 tools",
+      groups: [
+        {
+          title: "Read",
+          tools: [
+            "get_financial_overview",
+            "get_cash_flow",
+            "get_monthly_projection",
+            "get_spending_summary",
+            "search_transactions",
+            "list_goals",
+            "list_payment_targets",
+          ],
+        },
+        { title: "Calculate", tools: ["calculate", "plan_payoff"] },
+        {
+          title: "Act",
+          tools: ["record_payment", "update_account_balance", "log_transaction", "save_goal", "remember", "forget"],
+        },
+      ],
+      engine: {
+        title: "Calculation engine",
+        detail: "Due dates from each card’s statement day · MSI vs. pay-in-full balance · cash balance through every payday",
+      },
+      store: { title: "libSQL / Turso", detail: "Accounts, plans, transactions, goals and chat history" },
+    },
+    decisions: [
+      {
+        title: "Math in code, not in the model",
+        body: "The model never does arithmetic. Pure, tested functions compute schedules, due dates and balances; the coach reads their results or calls a calculate tool.",
+      },
+      {
+        title: "Tools that act, with guardrails",
+        body: "Inputs are validated with Zod before any tool runs. Recording a payment updates balances, installment progress and due dates in one batch, with a duplicate guard.",
+      },
+      {
+        title: "Extraction with a human in the loop",
+        body: "Statements and receipts are read with schema-validated structured output. Overlapping screenshots are deduplicated in one request, and every row is reviewed before it’s saved.",
+      },
+      {
+        title: "Cache-friendly, append-only history",
+        body: "Each conversation keeps a frozen system prompt and an append-only message log, so prompt caching holds across turns and history is never edited.",
+      },
+    ],
   },
   caseStudiesUi: {
     repository: "Repository",

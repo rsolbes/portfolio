@@ -26,6 +26,9 @@ export const credentialUrls = {
   googleCyber: "https://www.coursera.org/account/accomplishments/professional-cert/certificate/3GLGYF4WKYMN",
 };
 
+// Finance Coach stack, shown in its featured section.
+export const financeCoachStack = ["TypeScript", "Next.js 16", "React 19", "Claude API", "Zod", "Turso · libSQL", "Tailwind CSS"];
+
 // Thesis figures, from the thesis repository's own logs.
 export const thesisStack = ["Python 3.14", "PostgreSQL", "psycopg 3", "sqlglot", "YAML", "LLM APIs"];
 

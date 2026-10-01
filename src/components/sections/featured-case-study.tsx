@@ -10,7 +10,7 @@ import { StatusDot, Tag } from "../ui/primitives";
 import { Reveal, RevealGroup, RevealItem } from "../ui/reveal";
 import { PipelineDiagram } from "./pipeline-diagram";
 
-function Label({ n, children }: { n: string; children: ReactNode }) {
+export function Label({ n, children }: { n: string; children: ReactNode }) {
   return (
     <p className="flex items-center gap-2 font-mono text-[11px] tracking-[0.16em] text-subtle uppercase">
       <span className="text-accent">{n}</span>

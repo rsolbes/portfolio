@@ -74,31 +74,6 @@ const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    slug: "finance-coach",
-    title: "Finance Coach: coach financiero con IA",
-    kicker: "Agente de IA · Proyecto personal",
-    period: "oct 2026",
-    visibility: "public",
-    repo: links.financeCoachRepo,
-    summary:
-      "PWA de finanzas personales con un coach basado en Claude que organiza los pagos según cada día de nómina, pensada para cómo funciona el dinero en México: pago semanal, meses sin intereses y fechas de corte.",
-    problem:
-      "Las apps de los bancos muestran saldos, pero no dicen si los pagos del mes caben en los sueldos del mes. Con nómina semanal, varias tarjetas, MSI y préstamos pequeños, la pregunta real es de tiempos: qué vence antes del próximo pago y qué parte de cada saldo de tarjeta hay que liquidar completa para no pagar intereses.",
-    architecture: [
-      "Agente con herramientas: Claude en un ciclo con streaming y 15 herramientas para consultar cuentas, flujo de efectivo y gastos, calcular y actuar (registrar un pago, actualizar un saldo, guardar una meta). Las conversaciones solo se agregan, nunca se editan, lo que mantiene efectivo el caché de prompts.",
-      "Todas las cuentas en código: un motor con pruebas calcula la fecha límite de pago de cada tarjeta a partir de su fecha de corte, separa los MSI del saldo que debe pagarse completo y lleva el saldo de efectivo a través de cada día de pago. El modelo nunca hace aritmética: usa una herramienta de cálculo.",
-      "Lectura de estados de cuenta y comprobantes en PDF, capturas de pantalla o CSV, con salida estructurada validada por esquema. Las capturas que se traslapan se deduplican en una sola solicitud y cada movimiento se revisa antes de guardarse.",
-    ],
-    deployment:
-      "PWA instalable en Next.js 16 con Server Actions, desplegada en Vercel con una base de datos Turso (libSQL). La protege un código de acceso de un solo usuario con bloqueo por IP y global. Los datos personales nunca entran al repositorio y las pruebas usan datos ficticios.",
-    stack: ["TypeScript", "Next.js 16", "React 19", "Claude API", "Zod", "Turso · libSQL", "Tailwind CSS"],
-    facts: [
-      { value: "15", label: "herramientas del agente" },
-      { value: "27", label: "pruebas automatizadas" },
-      { value: "3", label: "formatos de entrada" },
-    ],
-  },
-  {
     slug: "casita-azul",
     title: "Plataforma inmobiliaria Casita Azul",
     kicker: "Full-stack · Proyecto para cliente",
@@ -433,6 +408,93 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
         "¿Qué proporción de preguntas no respondibles reconoce el sistema como tales?",
       ],
     },
+  },
+  financeCoach: {
+    featured: "Destacado · Agente de IA",
+    context: "Proyecto personal",
+    period: "oct 2026",
+    status: "En línea",
+    name: "finance-coach",
+    headline:
+      "Un coach financiero con IA que organiza cada pago según cada día de nómina y deja la aritmética a código con pruebas.",
+    viewRepo: "Ver repositorio",
+    labels: {
+      app: "La app",
+      problem: "Problema",
+      approach: "Enfoque",
+      agent: "Cómo funciona el agente",
+      decisions: "Decisiones de ingeniería",
+    },
+    screens: [
+      { id: "coach", label: "Coach", alt: "El coach organizando los pagos de cada nómina, con montos y fechas" },
+      {
+        id: "dashboard",
+        label: "Panel",
+        alt: "Panel con efectivo disponible, próximos pagos con saldo acumulado y los meses siguientes",
+      },
+      { id: "statement", label: "Estado de cuenta", alt: "Movimientos leídos de un estado de cuenta, listos para revisarse antes de guardar" },
+      { id: "spending", label: "Gastos", alt: "Gastos por categoría, principales comercios y la lista de movimientos" },
+    ],
+    phoneAlt: "El panel en un teléfono, instalado como app",
+    screensNote: "Las capturas usan datos ficticios.",
+    problem:
+      "Las apps de los bancos muestran saldos, pero no dicen si los pagos del mes caben en los sueldos del mes. Con nómina semanal, varias tarjetas, meses sin intereses (MSI) y préstamos pequeños, la pregunta real es de tiempos: qué vence antes del próximo pago y qué parte de cada saldo de tarjeta hay que liquidar completa para no pagar intereses.",
+    approach:
+      "Un coach conversacional basado en Claude que consulta las cuentas, planes y movimientos reales del usuario mediante herramientas y puede actuar sobre ellos, mientras que cada número que menciona sale de un motor determinista. Los estados de cuenta y comprobantes llegan como PDF o capturas de pantalla y se convierten en movimientos revisados.",
+    metrics: [
+      { value: 15, suffix: "", label: "herramientas del agente para consultar, calcular y actuar" },
+      { value: 27, suffix: "", label: "pruebas automatizadas del motor y las herramientas" },
+      { value: 3, suffix: "", label: "formatos de entrada: PDF, captura, CSV" },
+      { value: 2, suffix: "", label: "idiomas de respuesta: español e inglés" },
+    ],
+    agent: {
+      ask: { title: "Preguntas", detail: "“Organiza mis próximas 4 nóminas”" },
+      model: { title: "Claude", detail: "Ciclo de herramientas con streaming y razonamiento adaptativo" },
+      answer: { title: "Respuesta", detail: "En streaming; cada cifra sale de una herramienta" },
+      toolsTitle: "15 herramientas",
+      groups: [
+        {
+          title: "Consultar",
+          tools: [
+            "get_financial_overview",
+            "get_cash_flow",
+            "get_monthly_projection",
+            "get_spending_summary",
+            "search_transactions",
+            "list_goals",
+            "list_payment_targets",
+          ],
+        },
+        { title: "Calcular", tools: ["calculate", "plan_payoff"] },
+        {
+          title: "Actuar",
+          tools: ["record_payment", "update_account_balance", "log_transaction", "save_goal", "remember", "forget"],
+        },
+      ],
+      engine: {
+        title: "Motor de cálculo",
+        detail: "Fecha límite a partir de la fecha de corte · MSI vs. saldo a pagar completo · saldo de efectivo en cada día de pago",
+      },
+      store: { title: "libSQL / Turso", detail: "Cuentas, planes, movimientos, metas e historial del chat" },
+    },
+    decisions: [
+      {
+        title: "Las cuentas en código, no en el modelo",
+        body: "El modelo nunca hace aritmética. Funciones puras con pruebas calculan calendarios, fechas límite y saldos; el coach lee sus resultados o usa una herramienta de cálculo.",
+      },
+      {
+        title: "Herramientas que actúan, con salvaguardas",
+        body: "Las entradas se validan con Zod antes de ejecutar cualquier herramienta. Registrar un pago actualiza saldos, avance de mensualidades y fechas límite en un solo lote, con protección contra duplicados.",
+      },
+      {
+        title: "Extracción con revisión humana",
+        body: "Los estados de cuenta y comprobantes se leen con salida estructurada validada por esquema. Las capturas que se traslapan se deduplican en una sola solicitud y cada movimiento se revisa antes de guardarse.",
+      },
+      {
+        title: "Historial que solo crece, amigable con el caché",
+        body: "Cada conversación conserva un prompt de sistema fijo y un registro de mensajes que solo crece: el caché de prompts se mantiene entre turnos y el historial nunca se edita.",
+      },
+    ],
   },
   caseStudiesUi: {
     repository: "Repositorio",

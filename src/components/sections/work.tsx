@@ -1,6 +1,7 @@
 import type { Dictionary } from "@/content";
 import { Container, SectionHeading } from "../ui/primitives";
 import { CaseStudies } from "./case-studies";
+import { FeaturedAgent } from "./featured-agent";
 import { FeaturedCaseStudy } from "./featured-case-study";
 
 export function Work({ t }: { t: Dictionary }) {
@@ -9,6 +10,7 @@ export function Work({ t }: { t: Dictionary }) {
       <Container>
         <SectionHeading index="02" label={t.work.label} title={t.work.title} lead={t.work.lead} />
         <FeaturedCaseStudy t={t} />
+        <FeaturedAgent t={t} />
         <CaseStudies t={t} />
       </Container>
     </section>

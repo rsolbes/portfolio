@@ -126,7 +126,7 @@ function LeastPrivilege({ t }: { t: Dictionary }) {
                 className="flex items-center gap-2.5 rounded-lg border border-line bg-bg/40 px-3 py-2 text-xs"
               >
                 <Check className="size-3.5 shrink-0 text-accent" />
-                <span className="min-w-0 flex-1 truncate text-fg-soft" title={c.checks[i]}>
+                <span className="min-w-0 flex-1 leading-snug text-fg-soft">
                   {c.checks[i]}
                 </span>
                 <span className={cn("font-mono text-[10px]", r.kind === "barrier" ? "text-accent" : "text-subtle")}>

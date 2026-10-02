@@ -56,16 +56,16 @@ const caseStudies: CaseStudy[] = [
     visibility: "private",
     privateNote: "Company work · Unitam",
     summary:
-      "Ranks 136K business customers of a retailer with ~100 branches by their probability of lapsing, scored monthly inside the company’s .NET ERP.",
+      "Ranks 136K business customers of a retailer with about 100 branches by how likely they are to stop buying. Scores are updated monthly inside the company’s .NET ERP.",
     problem:
-      "Lapsing customers were flagged with a recency heuristic. The business needed a ranked list it could act on, with a risk percentage that means what it says, built from seven years of invoice history.",
+      "At-risk customers were flagged with a recency heuristic: a simple rule based on how recently they last bought. The business needed a ranked list it could act on, built from seven years of invoice history, with a risk percentage that can be trusted: a 30% risk should mean that about 3 in 10 of those customers stop buying.",
     architecture: [
       "385K customer-month snapshots from 7 years of invoices: 136K customers, 855K tickets, 104 branches, 30.5% base rate.",
-      "Benchmarked a GRU over raw monthly sequences against LightGBM on RFM features. Shipped LightGBM: the GRU’s PR-AUC edge was marginal, and LightGBM was better calibrated and far cheaper to serve.",
+      "Benchmarked a GRU over raw monthly sequences against LightGBM on RFM features (recency, frequency, monetary value). I chose LightGBM: the GRU was only slightly better on PR-AUC, while LightGBM was better calibrated and far cheaper to serve.",
       "Leakage-safe evaluation: time-based train, validation and test splits, forward-computed recency, and one shared feature function for training and scoring to prevent train/serve skew.",
     ],
     deployment:
-      "Monthly batch scoring writes back to SQL Server, and the ranking surfaces in the ERP’s reporting module. PR-AUC rose from 0.567 (the recency heuristic) to 0.617, and Brier score fell from 0.260 to 0.167, so the displayed risk percentage is calibrated, not just a ranking.",
+      "Every month, a batch job scores all customers and writes the results back to SQL Server, and the ranking appears in the ERP’s reporting module. PR-AUC rose from 0.567 (the recency heuristic) to 0.617, so the ranking is better. The Brier score, which measures how accurate the probabilities are, fell from 0.260 to 0.167, so the displayed risk percentage can be trusted, not just used to rank.",
     stack: ["Python", "LightGBM", "PyTorch", "pandas", "SQL Server", "C# · .NET"],
     facts: [
       { value: "0.617", label: "PR-AUC (was 0.567)" },
@@ -81,17 +81,17 @@ const caseStudies: CaseStudy[] = [
     visibility: "private",
     privateNote: "Private repositories",
     summary:
-      "Public listings site and back office for a real-estate agency: a property catalog with maps and favorites, plus an admin console for properties, agents and users.",
+      "A public listings website and back office for a real-estate agency: a property catalog with maps and favorites, plus an admin console for properties, agents and users.",
     problem:
-      "The agency needed its listings online and a way for staff to manage them without touching the database: publish properties with photo galleries, manage in-house and external agents, control who can administer what, and see which listings get attention.",
+      "The agency needed its listings online and a way for staff to manage them without touching the database. Staff needed to publish properties with photo galleries, manage in-house and outside agents, control who can administer what, and see which listings get attention.",
     architecture: [
       "Two Angular 20 single-page apps: a public client (Ionic components, Leaflet maps, favorites, PDF brochures with jsPDF) and an admin console with route guards and an auth interceptor.",
       "Flask REST API with 37 endpoints over PostgreSQL, using pooled psycopg2 connections. Sign-in and session refresh are delegated to Supabase Auth.",
-      "Property and agent images moved out of the database into Cloudflare R2 object storage through its S3-compatible API (boto3).",
+      "Property and agent images were moved out of the database and into Cloudflare R2 object storage through its S3-compatible API (boto3).",
       "Soft delete and restore for agents; per-listing view tracking feeds the admin dashboard.",
     ],
     deployment:
-      "Built production-ready through my consulting practice: a Gunicorn-served API, Docker, and static SPA builds with fallback routing, with changes merged through pull requests (104 commits across two repositories). The client ended the project before launch.",
+      "Built to be production-ready through my consulting practice, using a Gunicorn-served API, Docker, and static SPA builds with fallback routing. Changes were merged through pull requests (104 commits across two repositories). The client ended the project before launch.",
     stack: ["Angular 20", "TypeScript", "Flask", "PostgreSQL", "Supabase Auth", "Cloudflare R2", "Docker"],
     facts: [
       { value: "37", label: "API endpoints" },
@@ -107,16 +107,16 @@ const caseStudies: CaseStudy[] = [
     visibility: "public",
     repo: links.osSimulatorsRepo,
     summary:
-      "Two operating-systems simulators with live visualization: a paged memory manager built by a team of five, and a CPU scheduler.",
+      "Two operating system simulators with live visualization: a paged memory manager built by a team of five, and a CPU scheduler.",
     problem:
-      "Paging, TLB hits, page faults and scheduling policies are easy to describe and hard to see. The goal was to show, step by step, how an OS allocates memory and CPU time, and what happens under pressure with many processes running.",
+      "Paging, TLB hits, page faults and scheduling policies are easy to describe but hard to visualize. The goal was to show, step by step, how an OS allocates memory and CPU time, and what happens when many processes run at once.",
     architecture: [
       "Memory manager: per-process page tables, a 4-entry TLB and FIFO page replacement over 2 MB of RAM and 4 MB of swap in 256 KB frames, with up to 50 processes and every parameter read from config.ini.",
       "Live GTK views of page tables, memory frames and TLB hit/miss statistics, plus swap operations, average access time, fragmentation and a timestamped event log.",
       "Scheduler: FCFS, SJF, Round Robin and Priority, with Gantt-chart visualization and per-algorithm performance metrics.",
     ],
     deployment:
-      "Builds with a Makefile on Linux, or on Windows with MinGW. Ships with technical and user manuals and documented test runs.",
+      "Builds with a Makefile on Linux, or on Windows with MinGW. It includes technical and user manuals, plus documented test runs.",
     stack: ["C99", "GTK", "Make", "Linux · MinGW"],
     facts: [
       { value: "50", label: "max processes" },
@@ -132,7 +132,7 @@ const caseStudies: CaseStudy[] = [
     visibility: "public",
     repo: links.posRepo,
     summary:
-      "Sales, inventory, customers and users for a small retailer, with role-based access, receipts and email notifications.",
+      "Manages sales, inventory, customers and users for a small retailer, with role-based access, receipts and email notifications.",
     problem:
       "A retail business needed to register sales in real time, keep inventory accurate, manage customers and staff, and give managers reports, with each role seeing only what it should.",
     architecture: [
@@ -152,15 +152,15 @@ const timeline: TimelineEntry[] = [
   {
     period: "Jul 2026 – Present",
     current: true,
-    title: "Systems Auxiliary (Software Development)",
+    title: "Systems Assistant (Software Development)",
     org: "Unitam Uniformes",
     place: "Tampico, MX",
     points: [
-      "Full-time development on UNITAM NT, the company’s ERP and point-of-sale platform (C#, .NET Framework 4.7.1, WinForms, DevExpress, SQL Server), used across ~100 retail branches.",
+      "Full-time development on UNITAM NT, the company’s ERP and point-of-sale platform (C#, .NET Framework 4.7.1, WinForms, DevExpress, SQL Server), used across about 100 retail branches.",
       "Shipped a customer-churn model: monthly batch scoring written back to SQL Server and surfaced in the ERP’s reports. See the case study above.",
-      "Built reporting modules in a five-layer architecture that replaced hand-assembled reports, and wrote or optimized T-SQL procedures, fixing query timeouts and data-attribution bugs in regional sales reporting.",
+      "Built reporting modules, using a five-layer architecture, that replaced reports people used to assemble by hand. Also wrote and optimized T-SQL procedures, fixing query timeouts and data-attribution bugs in regional sales reports.",
       "Integrated BBVA and Banamex payment terminals into the point of sale (in bank certification) and automated order generation for a key wholesale client.",
-      "Gathered requirements with marketing, sales and finance; my technical assessment ruled out a TikTok Shop → Shopify → ERP integration at this stage.",
+      "Gathered requirements from the marketing, sales and finance teams. My technical assessment showed that a TikTok Shop → Shopify → ERP integration wasn’t practical yet.",
     ],
     tags: ["C#", ".NET Framework", "DevExpress", "SQL Server", "T-SQL", "Python", "LightGBM"],
   },
@@ -170,7 +170,7 @@ const timeline: TimelineEntry[] = [
     org: "Universidad de Burgos",
     place: "Spain",
     points: [
-      "Data mining in Python (classification, clustering, association), network analysis with NetworkX, and reverse engineering and refactoring of Java codebases against formal quality metrics.",
+      "Data mining in Python (classification, clustering, association rules), network analysis with NetworkX, and reverse engineering and refactoring of Java code to meet formal quality metrics.",
     ],
     tags: ["Python", "Data mining", "NetworkX", "Java"],
   },
@@ -180,7 +180,7 @@ const timeline: TimelineEntry[] = [
     org: "Solbes Soluciones Inteligentes",
     place: "Tampico, MX",
     points: [
-      "Independent practice serving 10–12 local businesses end to end, from requirements through deployment and support.",
+      "My own consulting practice, serving 10–12 local businesses from start to finish: requirements, development, deployment and support.",
       "Delivered client software, including a real-estate platform and a questionnaire app for a psychology practice, plus point-of-sale systems with inventory and reporting. Automation scripts cut manual data entry by 60%.",
       "Deployed servers, networks and security-camera systems for small-business clients.",
     ],
@@ -192,8 +192,8 @@ const timeline: TimelineEntry[] = [
     org: "CIYASA S.A. de C.V.",
     place: "Tampico, MX",
     points: [
-      "Sole IT resource for the offices: on-site servers at ~99% uptime and a dual-ISP failover network with no single point of failure.",
-      "Administered Google Workspace and Cloud, and wrote Python tools for monitoring and automation, plus internal utilities and documentation portals.",
+      "Sole IT resource for the offices: kept on-site servers at about 99% uptime and set up dual-ISP failover, so if one internet provider fails, the other takes over.",
+      "Administered Google Workspace and Google Cloud, and wrote Python tools for monitoring and automation, plus internal utilities and documentation portals.",
     ],
     tags: ["Python", "Linux", "GCP", "Networking"],
   },
@@ -221,7 +221,7 @@ export const en = {
   meta: {
     title: "Rodrigo Solbes · Software & AI Engineering",
     description:
-      "Software developer and Computer Engineering student shipping production machine learning inside an enterprise .NET ERP, moving into Software Engineering and Enterprise AI. Text-to-SQL, retrieval and data systems built so every answer shows its evidence.",
+      "Software developer and Computer Engineering student shipping production machine learning inside an enterprise .NET ERP, moving into software engineering and enterprise AI. Text-to-SQL, retrieval and data systems built so every answer shows its evidence.",
     ogLocale: "en_US",
   },
   site: { name: "Rodrigo Solbes", location: "Tampico, Mexico" },
@@ -245,7 +245,7 @@ export const en = {
     nowText: "Thesis: Spanish questions → SQL over public budget data",
     tagline: "Engineering software and AI systems *you can verify.*",
     intro:
-      "Computer Engineering student and Systems Auxiliary in Tampico, Mexico, with three years across software, data and IT infrastructure. I ship production machine learning inside an enterprise .NET ERP, and I’m moving into Software Engineering and Enterprise AI, building systems where every answer shows its evidence.",
+      "Computer Engineering student and Systems Assistant in Tampico, Mexico, with three years of experience across software, data and IT infrastructure. I build machine learning models that run in production inside my employer’s .NET ERP. Now I’m moving into software engineering and enterprise AI, building systems that show the evidence behind every answer.",
     ctaPrimary: "Read the case studies",
     ctaContact: "Get in touch",
     facts: [
@@ -260,14 +260,14 @@ export const en = {
     title: "Star schema of the Mexican federal budget warehouse",
     description: "A central fact table, hecho_gasto, with 1,285,233 rows, joined to twelve dimension tables.",
     rows: "rows",
-    caption: "Federal budget warehouse, 2020–2025. Twelve conformed dimensions around one fact table. Hover a node.",
+    caption: "Federal budget warehouse, 2020–2025. Twelve dimension tables around one fact table. Hover over or tap a node.",
     notes: dimensionNotes,
   },
   abstract: {
     label: "Abstract",
     leadStrong: "I work where enterprise data meets language models.",
     leadRest:
-      "At work, I ship a calibrated churn model inside a .NET ERP that serves about a hundred branches. In research, I’m building a system that answers Spanish questions about Mexico’s federal budget, choosing between generated SQL and retrieved regulation, and abstaining when the evidence isn’t there. What connects the two: systems that are reproducible, least-privileged, and honest about what they know.",
+      "At work, I built a calibrated churn model that predicts which customers are likely to stop buying. It runs inside a .NET ERP used by about 100 branches. In research, I’m building a system that answers Spanish questions about Mexico’s federal budget. It decides whether to answer with a generated SQL query or with passages from official regulations, and it declines to answer when the evidence isn’t there. What connects the two is building systems that are reproducible, least-privileged (each part gets only the access it needs), and honest about what they know.",
     keywordsLabel: "Keywords",
     keywords: [
       "text-to-SQL",
@@ -281,22 +281,22 @@ export const en = {
     principles: [
       {
         title: "Evidence over assertion",
-        body: "Every answer carries its proof: the SQL that ran, or the passage it cites. When the data can’t support an answer, the right output is an abstention.",
+        body: "Every answer carries its proof: the SQL that ran, or the passage it cites. When the data can’t support an answer, the right response is to decline to answer.",
       },
       {
         title: "Reproducible by default",
-        body: "Sources recorded with URL, date and hash. Prompts versioned like code. Three runs per configuration, reported with mean and spread.",
+        body: "Every source is recorded with its URL, date and hash. Prompts are version-controlled like code. Each configuration runs three times, and results are reported with the mean and spread.",
       },
       {
         title: "Defense in depth",
-        body: "The database doesn’t trust the validator, and the validator doesn’t trust the model. Each layer is named for what it can and can’t stop.",
+        body: "The database doesn’t trust the validator, and the validator doesn’t trust the model. Each layer is clearly labeled with what it can and can’t stop.",
       },
     ],
   },
   work: {
     label: "Selected work",
     title: "Case studies in data systems, applied AI and full-stack engineering.",
-    lead: "The problem, the architecture and how it ships, with the real numbers behind each one.",
+    lead: "For each one: the problem, the architecture, how it was deployed, and the real numbers behind it.",
   },
   thesis: {
     featured: "Featured",
@@ -307,13 +307,13 @@ export const en = {
     viewRepo: "View repository",
     labels: { problem: "Problem", approach: "Approach", architecture: "Architecture", notes: "Engineering notes" },
     problem:
-      "Mexico publishes its federal budget as open data, but reading it takes both data skills and government-accounting knowledge. The figures live in tables keyed by alphanumeric codes that only make sense against external catalogs; the rules that explain them live in regulatory PDFs. The data is open, but most people can’t use it.",
+      "Mexico publishes its federal budget as open data, but reading it takes both data skills and government-accounting knowledge. The figures are stored in tables keyed by alphanumeric codes that only make sense if you look them up in separate catalogs, and the rules that explain them are in regulatory PDFs. The data is open, but most people can’t use it.",
     approach:
-      "A system that answers Spanish questions by one of two routes. The data route translates the question into SQL over a documented semantic layer, validates it, runs it under a read-only role and returns the table with the exact query. The document route retrieves passages from official regulations and answers with citations. A router picks the route, and the system abstains when the evidence can’t support an answer.",
+      "The system answers Spanish questions in one of two ways. The data route turns the question into SQL over a documented semantic layer (descriptive views), validates it, runs it under a read-only database role, and returns the results along with the exact query. The document route retrieves passages from official regulations and answers with citations. A router decides which route to use, and the system declines to answer when the evidence isn’t strong enough.",
     metrics: [
       { value: 1285233, suffix: "", label: "fact rows loaded and reconciled" },
       { value: 6, suffix: "", label: "fiscal years normalized, 2020–2025" },
-      { value: 12, suffix: "", label: "conformed dimensions" },
+      { value: 12, suffix: "", label: "dimension tables" },
       { value: 11, suffix: "/11", label: "security checks passing" },
     ],
     pipeline: {
@@ -328,14 +328,14 @@ export const en = {
       foundationsLabel: "Foundations",
       foundation,
       abstention:
-        "Either route can end in an abstention. When the evidence can’t support an answer, saying so is the correct output.",
+        "Either route can end with the system declining to answer. When the evidence can’t support an answer, saying so is the right result.",
     },
     tabs: { integrity: "Data integrity", privilege: "Least privilege", evaluation: "Evaluation design" },
     integrity: {
-      title: "The CSV and the XLSX disagree.",
+      title: "The CSV and XLSX files don’t match.",
       body: [
-        "The Ministry of Finance publishes every fiscal year as both CSV and XLSX. A row-level cross-check showed they aren’t equivalent, so the source format is chosen per year. Every correction is declared in a normalization log, because a silent fix can’t be told apart from altering the data.",
-        "Loads run in a single transaction and end by reconciling row counts and per-stage totals (approved, accrued, paid) against the source, to the peso. Any mismatch rolls back the whole load. If the load log exists, validation passed.",
+        "The Ministry of Finance publishes each fiscal year in both CSV and XLSX formats. A row-by-row comparison showed they don’t contain the same data, so I choose the source format separately for each year. Every correction is declared in a normalization log, because an unrecorded fix looks the same as tampering with the data.",
+        "Each load runs as a single transaction. At the end, it checks that row counts and the totals for each stage (approved, accrued, paid) match the source exactly, down to the peso. If anything doesn’t match, the whole load is rolled back. So if a load log exists, validation passed.",
       ],
       headers: { year: "Year", source: "Source", why: "Why" },
       reasons: [
@@ -343,16 +343,16 @@ export const en = {
         "CSV drops 2 rows and blanks amounts",
         "CSV drops 3 rows, adds 828,067 filler rows",
         "CSV drops 1 row and corrupts a key",
-        "CSV overstates branch 51 by MXN 9,699 M",
-        "Formats identical; CSV parses faster",
+        "CSV overstates branch 51 by MXN 9,699 million",
+        "Both formats match; CSV loads faster",
       ],
       caption: "Table 1 · Source format per fiscal year, from docs/bitacora_normalizacion.md",
     },
     privilege: {
       title: "The database doesn’t trust the validator.",
       body: [
-        "The system runs SQL written by a language model, so safety can’t depend on the validator being right. The query role can only read the semantic views. In PostgreSQL a view runs with its owner’s privileges, which makes the semantic layer the only way in.",
-        "Session settings are treated as *safeguards*, not *barriers*: a session can SET them. So the orchestrator must enforce its own timeout and reject SET and set_config().",
+        "The system runs SQL written by a language model, so safety can’t depend on the validator being right. The query role can only read views: the semantic layer, plus a raw pass-through schema kept as the experiment’s control condition. In PostgreSQL, a view runs with its owner’s privileges, so views are the only way in and the base tables stay out of reach.",
+        "Session settings are treated as *safeguards*, not *barriers*, because a session can change them with SET. That’s why the orchestrator must enforce its own timeout and reject SET and set_config(), a validation step that is still planned.",
       ],
       listing: `-- The semantic layer is the only way in.
 REVOKE ALL ON ALL TABLES IN SCHEMA presupuesto FROM consulta_nlq;
@@ -369,7 +369,7 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
       checks: [
         "Runs as the role",
         "Reads the semantic layer",
-        "Reads the raw control schema",
+        "Reads the raw schema (experiment control)",
         "Cannot read base tables",
         "Cannot write, even with read-only off",
         "Cannot create temp tables",
@@ -385,8 +385,8 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
     evaluation: {
       title: "Measure the bias, don’t hide it.",
       body: [
-        "Accuracy is scored by execution, comparing result sets instead of SQL text, against a hand-verified question set. Questions have two origins, analyzed separately: citizens’ real transparency requests, quoted verbatim, and LLM-assisted questions generated from a schema-coverage matrix. If the system scores higher on generated questions, the gap measures their bias.",
-        "Only questions a human has verified enter an experiment. The documentation given to the model was frozen at v1 on 2026-09-21, and every question is dated, so any gain can be reported separately for questions written before and after the freeze.",
+        "Accuracy is measured by running each query and comparing its results, not its SQL text (execution accuracy), against a set of questions checked by hand. The questions come from two sources, analyzed separately: real transparency requests from citizens, quoted word for word, and questions written with an LLM’s help from a schema-coverage matrix, so they cover the schema systematically. If the system scores higher on the generated questions, the difference shows how biased those questions are.",
+        "Only questions verified by a person are used in experiments. The documentation given to the model was frozen at version 1 on September 21, 2026, and every question is dated, so any gain can be reported separately for questions written before and after the freeze.",
       ],
       ladderLabel: "Experimental ladder · 3 runs each",
       ladder: [
@@ -396,16 +396,16 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
         { id: "C4", title: "+ Self-correction", detail: "Retry on execution errors" },
       ],
       behaviorLabel: "Expected behavior · 61 drafted",
-      behaviors: ["Answer", "Ambiguous", "Abstain"],
+      behaviors: ["Answer", "Ambiguous", "Decline"],
       behaviorNote:
-        "Real citizen requests skew toward unanswerable questions: 78% of the first three batches asked for data the warehouse doesn’t hold. That is why answerable questions are generated.",
+        "Real citizen requests skew toward unanswerable questions: 78% of the first three batches asked for data the warehouse doesn’t hold. That’s why extra answerable questions are generated.",
       rqLabel: "Research questions",
       researchQuestions: [
-        "How accurately does an LLM generate correct SQL from Spanish questions about public budget data?",
-        "Which context (classification docs, retrieved examples) improves that accuracy?",
+        "How accurately can an LLM generate SQL from Spanish questions about public budget data?",
+        "Which kinds of context (classification docs, retrieved examples) improve that accuracy?",
         "How faithfully are document answers grounded in the sources they cite?",
-        "How precisely can each question be routed automatically?",
-        "What share of unanswerable questions does the system recognize as such?",
+        "How accurately can the system pick the right route for each question?",
+        "What share of unanswerable questions does the system correctly recognize as unanswerable?",
       ],
     },
   },
@@ -438,9 +438,9 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
     phoneAlt: "The dashboard on a phone, installed as an app",
     screensNote: "Screenshots use made-up data.",
     problem:
-      "Banking apps show balances, not whether this month’s payments fit this month’s paychecks. With weekly pay, several cards, interest-free installments (MSI) and small loans, the real question is about timing: what’s due before the next payday, and which part of each card balance must be paid in full to avoid interest.",
+      "Banking apps show your balances, but not whether this month’s payments fit within this month’s paychecks. With weekly pay, several cards, interest-free installments (MSI) and small loans, the real question is about timing: what’s due before the next payday, and which part of each card balance must be paid in full to avoid interest.",
     approach:
-      "A chat coach backed by Claude that looks up the user’s real accounts, plans and transactions through tools, and can act on them, while every number it quotes comes from a deterministic engine. Bank statements and payment receipts come in as PDFs or phone screenshots and become reviewed transactions.",
+      "A chat coach powered by Claude. It uses tools to look up the user’s real accounts, payment plans and transactions, and it can update them. Every number it quotes comes from a deterministic calculation engine, not from the model. Users upload bank statements and receipts as PDFs, phone screenshots or CSV files, and these become transactions the user reviews.",
     metrics: [
       { value: 19, suffix: "", label: "agent tools to read, calculate and act" },
       { value: 41, suffix: "", label: "automated tests on the engine and tools" },
@@ -495,15 +495,15 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
       },
       {
         title: "Tools that act, with guardrails",
-        body: "Inputs are validated with Zod before any tool runs. Recording a payment updates balances, installment progress and due dates in one batch, with a duplicate guard.",
+        body: "Inputs are validated with Zod before any tool runs. Recording a payment updates balances, installment progress and due dates in a single step, and a duplicate check stops the same payment from being recorded twice.",
       },
       {
         title: "Extraction with a human in the loop",
-        body: "Statements and receipts are read with schema-validated structured output. Overlapping screenshots are deduplicated in one request, and every row is reviewed before it’s saved.",
+        body: "The model reads statements and receipts and returns structured output validated against a schema. If screenshots overlap, repeated rows are removed in the same request, and every row is reviewed before it’s saved.",
       },
       {
         title: "Cache-friendly, append-only history",
-        body: "Each conversation keeps a frozen system prompt and an append-only message log, so prompt caching holds across turns and history is never edited.",
+        body: "Each conversation keeps the same system prompt from start to finish, and new messages are only appended, never edited. This keeps prompt caching effective across turns.",
       },
     ],
   },
@@ -537,12 +537,12 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
   experience: {
     label: "Experience & credentials",
     title: "Three years from server rooms to production ML.",
-    lead: "IT infrastructure, independent consulting and enterprise .NET, now shipping machine learning inside an ERP that serves about a hundred branches.",
+    lead: "From IT infrastructure and independent consulting to enterprise .NET, and now machine learning inside an ERP used by about 100 branches.",
     labels: {
       timeline: "Timeline",
       recognition: "Recognition",
       certifications: "Certifications",
-      verifiable: "verifiable",
+      verifiable: "verifiable credentials",
       capabilities: "Capabilities",
       verify: "Verify credential",
       earned: "Earned",
@@ -567,7 +567,7 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
   contact: {
     label: "Contact",
     title: "Let’s build systems people can *check*.",
-    body: "Open to software engineering and enterprise AI roles, internships and research collaborations, remote or on-site. As a Spanish citizen, I can work anywhere in the EU with no visa sponsorship. I reply in English or Spanish.",
+    body: "I’m open to software engineering and enterprise AI roles, internships and research collaborations, remote or on-site. As a Spanish citizen, I can work anywhere in the EU without needing visa sponsorship. I reply in English or Spanish.",
     email: "Email me",
     resume: "Résumé (PDF)",
     // Served from public/. Set to null to hide the button.

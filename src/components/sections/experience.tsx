@@ -53,7 +53,12 @@ function Certifications({ x, opensNewTab }: { x: Experience; opensNewTab: string
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-medium text-fg">
                     {c.name}
-                    {c.code ? <span className="ml-2 font-mono text-[11px] font-normal text-subtle">{c.code}</span> : null}
+                    {c.code ? (
+                      <>
+                        {" "}
+                        <span className="ml-1 font-mono text-[11px] font-normal text-subtle">{c.code}</span>
+                      </>
+                    ) : null}
                   </span>
                   <span className="mt-0.5 block font-mono text-[11px] text-subtle">{c.issuer}</span>
                 </span>

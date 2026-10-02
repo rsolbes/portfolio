@@ -56,16 +56,16 @@ const caseStudies: CaseStudy[] = [
     visibility: "private",
     privateNote: "Trabajo en empresa · Unitam",
     summary:
-      "Ordena a 136 mil clientes empresariales de una cadena con ~100 sucursales según su probabilidad de dejar de comprar, con una puntuación mensual dentro del ERP en .NET de la empresa.",
+      "Ordena a 136 mil clientes empresariales de una cadena con unas 100 sucursales según su probabilidad de dejar de comprar, con una puntuación mensual dentro del ERP en .NET de la empresa.",
     problem:
-      "Los clientes en riesgo se detectaban con una heurística de recencia. El negocio necesitaba una lista ordenada con la que pudiera actuar, con un porcentaje de riesgo que signifique lo que dice, construida a partir de siete años de historial de facturación.",
+      "Los clientes en riesgo se detectaban con una heurística de recencia: una regla simple basada en cuándo compraron por última vez. El negocio necesitaba una lista priorizada sobre la cual actuar, construida a partir de siete años de historial de facturación, con un porcentaje de riesgo que significara lo que dice: un riesgo de 30% debería significar que unos 3 de cada 10 de esos clientes dejan de comprar.",
     architecture: [
-      "385 mil cortes cliente-mes a partir de 7 años de facturas: 136 mil clientes, 855 mil tickets, 104 sucursales y una tasa base de 30.5%.",
-      "Comparé una GRU sobre secuencias mensuales crudas contra LightGBM con variables RFM. Se implementó LightGBM: la ventaja de la GRU en PR-AUC era marginal, y LightGBM estaba mejor calibrado y era mucho más barato de servir.",
+      "385 mil cortes cliente-mes a partir de siete años de facturas: 136 mil clientes, 855 mil tickets, 104 sucursales y una tasa base de 30.5%.",
+      "Comparé una GRU sobre secuencias mensuales crudas contra LightGBM con variables RFM (recencia, frecuencia y valor monetario). Elegí LightGBM: la ventaja de la GRU en PR-AUC era marginal, y LightGBM estaba mejor calibrado y era mucho más barato de servir.",
       "Evaluación sin fuga de información: particiones temporales de entrenamiento, validación y prueba, recencia calculada hacia adelante y una sola función de variables compartida entre entrenamiento y puntuación, para evitar desfases entre ambos.",
     ],
     deployment:
-      "La puntuación mensual por lotes se escribe de vuelta en SQL Server y el ranking aparece en el módulo de reportes del ERP. El PR-AUC subió de 0.567 (la heurística de recencia) a 0.617 y el Brier score bajó de 0.260 a 0.167, así que el porcentaje de riesgo mostrado está calibrado: no es solo un orden.",
+      "La puntuación mensual por lotes se guarda en SQL Server y el ranking aparece en el módulo de reportes del ERP. El PR-AUC subió de 0.567 (la heurística de recencia) a 0.617, así que el orden es mejor. El Brier score, que mide qué tan exactas son las probabilidades, bajó de 0.260 a 0.167, así que el porcentaje de riesgo mostrado es confiable y no solo sirve para ordenar.",
     stack: ["Python", "LightGBM", "PyTorch", "pandas", "SQL Server", "C# · .NET"],
     facts: [
       { value: "0.617", label: "PR-AUC (antes 0.567)" },
@@ -86,12 +86,12 @@ const caseStudies: CaseStudy[] = [
       "La inmobiliaria necesitaba publicar sus propiedades y que su personal las administrara sin tocar la base de datos: publicar inmuebles con galerías de fotos, gestionar agentes internos y externos, controlar quién administra qué y ver qué propiedades generan interés.",
     architecture: [
       "Dos aplicaciones Angular 20 de una sola página: un cliente público (componentes Ionic, mapas con Leaflet, favoritos, fichas en PDF con jsPDF) y una consola de administración con guards de rutas e interceptor de autenticación.",
-      "API REST en Flask con 37 endpoints sobre PostgreSQL, con conexiones psycopg2 en pool. El inicio y la renovación de sesión se delegan a Supabase Auth.",
-      "Las imágenes de propiedades y agentes salieron de la base de datos hacia almacenamiento de objetos en Cloudflare R2, mediante su API compatible con S3 (boto3).",
-      "Borrado lógico y restauración de agentes; el conteo de visitas por propiedad alimenta el dashboard administrativo.",
+      "API REST en Flask con 37 endpoints sobre PostgreSQL, con un pool de conexiones psycopg2. El inicio y la renovación de sesión se delegan en Supabase Auth.",
+      "Las imágenes de propiedades y agentes se migraron de la base de datos a un almacenamiento de objetos en Cloudflare R2, mediante su API compatible con S3 (boto3).",
+      "Borrado lógico y restauración de agentes; el conteo de visitas por propiedad alimenta el panel administrativo.",
     ],
     deployment:
-      "Construido listo para producción desde mi práctica de consultoría: API servida con Gunicorn, Docker y builds estáticos de las SPA con enrutamiento de respaldo, con cambios integrados mediante pull requests (104 commits en dos repositorios). El cliente canceló el proyecto antes del lanzamiento.",
+      "Desarrollado y preparado para producción desde mi práctica de consultoría: API servida con Gunicorn, Docker y builds estáticos de las SPA con enrutamiento de respaldo, con cambios integrados mediante pull requests (104 commits en dos repositorios). El cliente canceló el proyecto antes del lanzamiento.",
     stack: ["Angular 20", "TypeScript", "Flask", "PostgreSQL", "Supabase Auth", "Cloudflare R2", "Docker"],
     facts: [
       { value: "37", label: "endpoints de API" },
@@ -134,7 +134,7 @@ const caseStudies: CaseStudy[] = [
     summary:
       "Ventas, inventario, clientes y usuarios para un pequeño comercio, con acceso por roles, tickets y notificaciones por correo.",
     problem:
-      "Un comercio necesitaba registrar ventas en tiempo real, mantener el inventario exacto, administrar clientes y personal, y dar reportes a los gerentes, con cada rol viendo solo lo que le corresponde.",
+      "Un comercio necesitaba registrar ventas en tiempo real, mantener el inventario exacto, administrar clientes y personal, y generar reportes para los gerentes, con cada rol viendo solo lo que le corresponde.",
     architecture: [
       "Aplicación Flask sobre MySQL, con el esquema SQL y los procedimientos almacenados versionados en el repositorio.",
       "Tres roles (vendedor, gerente, administrador), aplicados en el backend y reflejados en la interfaz.",
@@ -155,9 +155,9 @@ const timeline: TimelineEntry[] = [
     org: "Unitam Uniformes",
     place: "Tampico, MX",
     points: [
-      "Desarrollo de tiempo completo en UNITAM NT, el ERP y punto de venta de la empresa (C#, .NET Framework 4.7.1, WinForms, DevExpress, SQL Server), usado en ~100 sucursales.",
+      "Desarrollo de tiempo completo en UNITAM NT, el ERP y punto de venta de la empresa (C#, .NET Framework 4.7.1, WinForms, DevExpress, SQL Server), usado en unas 100 sucursales.",
       "Implementé un modelo de abandono de clientes: puntuación mensual por lotes escrita en SQL Server y visible en los reportes del ERP. Ver el caso de estudio arriba.",
-      "Construí módulos de reportes en una arquitectura de cinco capas que reemplazaron reportes armados a mano, y escribí u optimicé procedimientos en T-SQL, corrigiendo timeouts y errores de atribución en reportes de ventas regionales.",
+      "Construí módulos de reportes, sobre una arquitectura de cinco capas, que reemplazaron los reportes armados a mano, y escribí u optimicé procedimientos en T-SQL, con lo que corregí timeouts y errores de atribución en reportes de ventas regionales.",
       "Integré terminales de pago de BBVA y Banamex al punto de venta (en certificación bancaria) y automaticé la generación de pedidos para un cliente mayorista clave.",
       "Levanté requerimientos con marketing, ventas y finanzas; mi evaluación técnica descartó, por ahora, una integración TikTok Shop → Shopify → ERP.",
     ],
@@ -169,7 +169,7 @@ const timeline: TimelineEntry[] = [
     org: "Universidad de Burgos",
     place: "España",
     points: [
-      "Minería de datos en Python (clasificación, clustering, asociación), análisis de redes con NetworkX, e ingeniería inversa y refactorización de código Java con métricas formales de calidad.",
+      "Minería de datos en Python (clasificación, clustering, reglas de asociación), análisis de redes con NetworkX, e ingeniería inversa y refactorización de código Java con métricas formales de calidad.",
     ],
     tags: ["Python", "Minería de datos", "NetworkX", "Java"],
   },
@@ -191,8 +191,8 @@ const timeline: TimelineEntry[] = [
     org: "CIYASA S.A. de C.V.",
     place: "Tampico, MX",
     points: [
-      "Único responsable de TI en las oficinas: servidores locales con ~99% de disponibilidad y una red con doble ISP y conmutación por falla, sin punto único de falla.",
-      "Administré Google Workspace y Cloud, y escribí herramientas en Python para monitoreo y automatización, además de utilidades internas y portales de documentación.",
+      "Único responsable de TI en las oficinas: mantuve los servidores locales con cerca de 99% de disponibilidad y configuré conmutación por falla con doble ISP, así que si un proveedor de internet falla, el otro toma el relevo.",
+      "Administré Google Workspace y Google Cloud, y escribí herramientas en Python para monitoreo y automatización, además de utilidades internas y portales de documentación.",
     ],
     tags: ["Python", "Linux", "GCP", "Redes"],
   },
@@ -244,7 +244,7 @@ export const es: Dictionary = {
     nowText: "Tesis: preguntas en español → SQL sobre el presupuesto público",
     tagline: "Ingeniería de software y sistemas de IA *que puedes verificar.*",
     intro:
-      "Estudiante de Ingeniería en Sistemas Computacionales y Auxiliar de Sistemas en Tampico, México, con tres años entre software, datos e infraestructura de TI. Llevo machine learning a producción dentro de un ERP empresarial en .NET y estoy dando el salto a la Ingeniería de Software y la IA empresarial, construyendo sistemas en los que cada respuesta muestra su evidencia.",
+      "Estudiante de Ingeniería en Sistemas Computacionales y Auxiliar de Sistemas en Tampico, México, con tres años de experiencia en software, datos e infraestructura de TI. Llevo machine learning a producción dentro de un ERP empresarial en .NET y estoy dando el salto a la ingeniería de software y la IA empresarial, construyendo sistemas en los que cada respuesta muestra su evidencia.",
     ctaPrimary: "Ver casos de estudio",
     ctaContact: "Contacto",
     facts: [
@@ -261,14 +261,14 @@ export const es: Dictionary = {
       "Una tabla de hechos central, hecho_gasto, con 1,285,233 filas, unida a doce tablas de dimensiones.",
     rows: "filas",
     caption:
-      "Almacén del presupuesto federal, 2020–2025. Doce dimensiones conformadas alrededor de una tabla de hechos. Pasa el cursor sobre un nodo.",
+      "Almacén del presupuesto federal, 2020–2025. Doce tablas de dimensiones alrededor de una tabla de hechos. Pasa el cursor sobre un nodo o tócalo.",
     notes: dimensionNotes,
   },
   abstract: {
     label: "Resumen",
-    leadStrong: "Trabajo donde los datos empresariales se encuentran con los modelos de lenguaje.",
+    leadStrong: "Trabajo donde se cruzan los datos empresariales y los modelos de lenguaje.",
     leadRest:
-      "En mi empleo, opero un modelo calibrado de abandono de clientes dentro de un ERP en .NET que atiende a cerca de cien sucursales. En investigación, construyo un sistema que responde preguntas en español sobre el presupuesto federal de México, eligiendo entre SQL generado y normatividad recuperada, y absteniéndose cuando la evidencia no está. Lo que une ambas cosas: sistemas reproducibles, con mínimo privilegio y honestos sobre lo que saben.",
+      "En mi trabajo opero un modelo calibrado de abandono de clientes dentro de un ERP en .NET que atiende a unas 100 sucursales. En investigación, construyo un sistema que responde preguntas en español sobre el presupuesto federal de México, eligiendo entre SQL generado y normatividad recuperada, y absteniéndose cuando no hay evidencia suficiente. Lo que une ambas cosas: sistemas reproducibles, con mínimo privilegio y honestos respecto de lo que saben.",
     keywordsLabel: "Palabras clave",
     keywords: [
       "text-to-SQL",
@@ -290,14 +290,14 @@ export const es: Dictionary = {
       },
       {
         title: "Defensa en profundidad",
-        body: "La base de datos no confía en el validador, y el validador no confía en el modelo. Cada capa se nombra por lo que puede y no puede detener.",
+        body: "La base de datos no confía en el validador, y el validador no confía en el modelo. Cada capa se define por lo que puede detener y lo que no.",
       },
     ],
   },
   work: {
     label: "Trabajo seleccionado",
     title: "Casos de estudio en sistemas de datos, IA aplicada e ingeniería full-stack.",
-    lead: "El problema, la arquitectura y cómo llega a producción, con las cifras reales detrás de cada uno.",
+    lead: "El problema, la arquitectura y el paso a producción de cada caso, con las cifras reales que los respaldan.",
   },
   thesis: {
     featured: "Destacado",
@@ -308,13 +308,13 @@ export const es: Dictionary = {
     viewRepo: "Ver repositorio",
     labels: { problem: "Problema", approach: "Enfoque", architecture: "Arquitectura", notes: "Notas de ingeniería" },
     problem:
-      "México publica su presupuesto federal como datos abiertos, pero leerlo exige saber de análisis de datos y de contabilidad gubernamental. Las cifras viven en tablas con claves alfanuméricas que solo tienen sentido junto a catálogos externos; las reglas que las explican viven en PDFs normativos. Los datos son abiertos, pero la mayoría de la gente no puede usarlos.",
+      "México publica su presupuesto federal como datos abiertos, pero leerlo exige saber de análisis de datos y de contabilidad gubernamental. Las cifras viven en tablas con claves alfanuméricas que solo tienen sentido junto a catálogos externos; las reglas que las explican viven en PDF normativos. Los datos son abiertos, pero la mayoría de la gente no puede usarlos.",
     approach:
       "Un sistema que responde preguntas en español por una de dos rutas. La ruta de datos traduce la pregunta a SQL sobre una capa semántica documentada, lo valida, lo ejecuta con un rol de solo lectura y devuelve la tabla junto con la consulta exacta. La ruta documental recupera fragmentos de la normatividad oficial y responde con citas. Un enrutador elige la ruta, y el sistema se abstiene cuando la evidencia no alcanza para responder.",
     metrics: [
       { value: 1285233, suffix: "", label: "filas de hechos cargadas y conciliadas" },
       { value: 6, suffix: "", label: "ejercicios fiscales normalizados, 2020–2025" },
-      { value: 12, suffix: "", label: "dimensiones conformadas" },
+      { value: 12, suffix: "", label: "tablas de dimensiones" },
       { value: 11, suffix: "/11", label: "pruebas de seguridad aprobadas" },
     ],
     pipeline: {
@@ -342,9 +342,9 @@ export const es: Dictionary = {
       reasons: [
         "El CSV pierde 10 filas",
         "El CSV pierde 2 filas y deja importes en blanco",
-        "El CSV pierde 3 filas y agrega 828,067 de relleno",
-        "El CSV pierde 1 fila y corrompe una llave",
-        "El CSV reporta MXN 9,699 M de más en el ramo 51",
+        "El CSV pierde 3 filas y agrega 828,067 filas de relleno",
+        "El CSV pierde 1 fila y corrompe una clave",
+        "El CSV reporta MXN 9,699 millones de más en el ramo 51",
         "Formatos idénticos; el CSV se lee más rápido",
       ],
       caption: "Tabla 1 · Formato de origen por ejercicio, de docs/bitacora_normalizacion.md",
@@ -352,8 +352,8 @@ export const es: Dictionary = {
     privilege: {
       title: "La base de datos no confía en el validador.",
       body: [
-        "El sistema ejecuta SQL escrito por un modelo de lenguaje, así que la seguridad no puede depender de que el validador acierte. El rol de consulta solo puede leer las vistas semánticas. En PostgreSQL una vista se ejecuta con los privilegios de su dueño, lo que convierte a la capa semántica en la única puerta de entrada.",
-        "Los ajustes de sesión se tratan como *salvaguardas*, no como *barreras*: la propia sesión puede cambiarlos con SET. Por eso el orquestador debe imponer su propio tiempo límite y rechazar SET y set_config().",
+        "El sistema ejecuta SQL escrito por un modelo de lenguaje, así que la seguridad no puede depender de que el validador acierte. El rol de consulta solo puede leer vistas: la capa semántica y un esquema crudo de paso directo, que es la condición de control del experimento. En PostgreSQL, una vista se ejecuta con los privilegios de su dueño, así que las vistas son la única puerta de entrada y las tablas base quedan fuera de alcance.",
+        "Los ajustes de sesión se tratan como *salvaguardas*, no como *barreras*: la propia sesión puede cambiarlos con SET. Por eso el orquestador debe imponer su propio tiempo límite y rechazar SET y set_config(), un paso de validación que aún está planeado.",
       ],
       listing: `-- La capa semántica es la única puerta de entrada.
 REVOKE ALL ON ALL TABLES IN SCHEMA presupuesto FROM consulta_nlq;
@@ -369,11 +369,11 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
       checks: [
         "Corre realmente como el rol",
         "Lee la capa semántica",
-        "Lee el esquema crudo de control",
+        "Lee el esquema crudo (control del experimento)",
         "No lee las tablas base",
-        "No escribe aun sin solo lectura",
+        "No escribe aunque se desactive el modo de solo lectura",
         "No crea tablas temporales",
-        "Confinado a su base",
+        "Confinado a su base de datos",
         "Solo lectura por defecto",
         "Escritura bloqueada por defecto",
         "Tiempo límite configurado",
@@ -385,8 +385,8 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
     evaluation: {
       title: "Medir el sesgo, no esconderlo.",
       body: [
-        "La exactitud se mide por ejecución, comparando conjuntos de resultados y no el texto del SQL, contra un conjunto de preguntas verificado a mano. Las preguntas tienen dos orígenes que se analizan por separado: solicitudes de transparencia reales de ciudadanos, citadas textualmente, y preguntas generadas con asistencia de un LLM a partir de una matriz de cobertura del esquema. Si el sistema acierta más en las generadas, esa diferencia mide su sesgo.",
-        "Solo las preguntas verificadas por una persona entran a un experimento. La documentación que recibe el modelo se congeló en su v1 el 2026-09-21 y cada pregunta tiene fecha, así que la mejora puede reportarse por separado para las preguntas anteriores y posteriores al congelamiento.",
+        "La exactitud se mide por ejecución contra un conjunto de preguntas verificado a mano: se comparan los resultados, no el texto del SQL. Las preguntas tienen dos orígenes que se analizan por separado: solicitudes de transparencia reales de ciudadanos, citadas textualmente, y preguntas generadas con asistencia de un LLM a partir de una matriz de cobertura del esquema. Si el sistema acierta más en las generadas, esa diferencia mide su sesgo.",
+        "Solo las preguntas verificadas por una persona entran a un experimento. La documentación que recibe el modelo se congeló en su versión 1 el 21 de septiembre de 2026 y cada pregunta tiene fecha, así que la mejora puede reportarse por separado para las preguntas anteriores y posteriores al congelamiento.",
       ],
       ladderLabel: "Escalera experimental · 3 corridas cada una",
       ladder: [
@@ -398,14 +398,14 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
       behaviorLabel: "Comportamiento esperado · 61 redactadas",
       behaviors: ["Responder", "Ambigua", "Abstenerse"],
       behaviorNote:
-        "Las solicitudes ciudadanas reales tienden a ser no respondibles: el 78% de los tres primeros lotes pedía datos que el almacén no contiene. Por eso las preguntas respondibles se generan.",
+        "Las solicitudes ciudadanas reales tienden a ser no respondibles: el 78% de los tres primeros lotes pedía datos que el almacén no contiene. Por eso se generan preguntas respondibles adicionales.",
       rqLabel: "Preguntas de investigación",
       researchQuestions: [
-        "¿Con qué exactitud genera un LLM consultas SQL correctas a partir de preguntas en español sobre datos presupuestarios públicos?",
-        "¿Qué elementos de contexto (documentación de clasificaciones, ejemplos) mejoran esa exactitud?",
+        "¿Con qué exactitud puede un LLM generar SQL a partir de preguntas en español sobre datos presupuestarios públicos?",
+        "¿Qué tipos de contexto (documentación de clasificaciones, ejemplos recuperados) mejoran esa exactitud?",
         "¿Con qué fidelidad se sustentan las respuestas documentales en las fuentes citadas?",
-        "¿Con qué precisión puede enrutarse automáticamente cada pregunta?",
-        "¿Qué proporción de preguntas no respondibles reconoce el sistema como tales?",
+        "¿Con qué exactitud puede el sistema elegir la ruta correcta para cada pregunta?",
+        "¿Qué proporción de preguntas no respondibles reconoce correctamente el sistema como no respondibles?",
       ],
     },
   },
@@ -416,7 +416,7 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
     status: "En línea",
     name: "finance-coach",
     headline:
-      "Un coach financiero con IA que organiza cada pago según cada día de nómina y deja la aritmética a código con pruebas.",
+      "Un coach financiero con IA que organiza cada pago por día de nómina y deja la aritmética en manos de código con pruebas.",
     viewRepo: "Ver repositorio",
     labels: {
       app: "La app",
@@ -438,9 +438,9 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
     phoneAlt: "El panel en un teléfono, instalado como app",
     screensNote: "Las capturas usan datos ficticios.",
     problem:
-      "Las apps de los bancos muestran saldos, pero no dicen si los pagos del mes caben en los sueldos del mes. Con nómina semanal, varias tarjetas, meses sin intereses (MSI) y préstamos pequeños, la pregunta real es de tiempos: qué vence antes del próximo pago y qué parte de cada saldo de tarjeta hay que liquidar completa para no pagar intereses.",
+      "Las apps de los bancos muestran saldos, pero no dicen si el sueldo del mes alcanza para los pagos del mes. Con nómina semanal, varias tarjetas, meses sin intereses (MSI) y préstamos pequeños, la pregunta real es de tiempos: qué vence antes del próximo pago y qué parte de cada saldo de tarjeta hay que liquidar completa para no pagar intereses.",
     approach:
-      "Un coach conversacional basado en Claude que consulta las cuentas, planes y movimientos reales del usuario mediante herramientas y puede actuar sobre ellos, mientras que cada número que menciona sale de un motor determinista. Los estados de cuenta y comprobantes llegan como PDF o capturas de pantalla y se convierten en movimientos revisados.",
+      "Un coach conversacional basado en Claude que consulta las cuentas, planes y movimientos reales del usuario mediante herramientas y puede actuar sobre ellos; cada número que menciona sale de un motor determinista. Los estados de cuenta y comprobantes llegan como PDF, capturas de pantalla o archivos CSV y se convierten en movimientos revisados.",
     metrics: [
       { value: 19, suffix: "", label: "herramientas del agente para consultar, calcular y actuar" },
       { value: 41, suffix: "", label: "pruebas automatizadas del motor y las herramientas" },
@@ -484,13 +484,13 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
       ],
       engine: {
         title: "Motor de cálculo",
-        detail: "Fecha límite a partir de la fecha de corte · MSI vs. saldo a pagar completo · saldo de efectivo en cada día de pago",
+        detail: "Fecha límite a partir de la fecha de corte · MSI vs saldo a pagar completo · saldo de efectivo en cada día de pago",
       },
       store: { title: "libSQL / Turso", detail: "Cuentas, planes, movimientos, metas e historial del chat" },
     },
     decisions: [
       {
-        title: "Las cuentas en código, no en el modelo",
+        title: "Los cálculos en código, no en el modelo",
         body: "El modelo nunca hace aritmética. Funciones puras con pruebas calculan calendarios, fechas límite y saldos; el coach lee sus resultados o usa una herramienta de cálculo.",
       },
       {
@@ -502,7 +502,7 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
         body: "Los estados de cuenta y comprobantes se leen con salida estructurada validada por esquema. Las capturas que se traslapan se deduplican en una sola solicitud y cada movimiento se revisa antes de guardarse.",
       },
       {
-        title: "Historial que solo crece, amigable con el caché",
+        title: "Historial que solo crece, pensado para el caché",
         body: "Cada conversación conserva un prompt de sistema fijo y un registro de mensajes que solo crece: el caché de prompts se mantiene entre turnos y el historial nunca se edita.",
       },
     ],
@@ -517,7 +517,7 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
   archive: [
     {
       name: "smart-home",
-      detail: "Sensores ESP32 (temperatura, humedad, movimiento, luz) con dashboard en tiempo real en Firebase y control de dispositivos",
+      detail: "Sensores ESP32 (temperatura, humedad, movimiento, luz) con un panel en tiempo real en Firebase y control de dispositivos",
       lang: "ESP32 · Firebase",
       href: links.smartHomeRepo,
     },
@@ -536,13 +536,13 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
   ],
   experience: {
     label: "Experiencia y credenciales",
-    title: "Tres años del cuarto de servidores al ML en producción.",
-    lead: "Infraestructura de TI, consultoría independiente y .NET empresarial; hoy llevo machine learning a producción dentro de un ERP que atiende a cerca de cien sucursales.",
+    title: "Tres años: del cuarto de servidores al ML en producción.",
+    lead: "Infraestructura de TI, consultoría independiente y .NET empresarial; hoy llevo machine learning a producción dentro de un ERP que atiende a unas 100 sucursales.",
     labels: {
       timeline: "Trayectoria",
       recognition: "Reconocimientos",
       certifications: "Certificaciones",
-      verifiable: "verificables",
+      verifiable: "credenciales verificables",
       capabilities: "Capacidades",
       verify: "Verificar credencial",
       earned: "Obtenida",
@@ -567,7 +567,7 @@ ALTER ROLE consulta_nlq CONNECTION LIMIT 5;`,
   contact: {
     label: "Contacto",
     title: "Construyamos sistemas que la gente pueda *comprobar*.",
-    body: "Abierto a puestos de ingeniería de software e IA empresarial, prácticas y colaboraciones de investigación, en remoto o presencial. Como ciudadano español, puedo trabajar en cualquier país de la UE sin patrocinio de visa. Respondo en español o inglés.",
+    body: "Abierto a puestos de ingeniería de software e IA empresarial, prácticas y colaboraciones de investigación, en remoto o de forma presencial. Como ciudadano español, puedo trabajar en cualquier país de la UE sin patrocinio de visa. Respondo en español o inglés.",
     email: "Escríbeme",
     resume: "CV (PDF)",
     resumeHref: "/Rodrigo-Solbes-CV-ES.pdf",

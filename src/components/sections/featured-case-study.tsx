@@ -212,7 +212,7 @@ function Evaluation({ t }: { t: Dictionary }) {
 export function FeaturedCaseStudy({ t }: { t: Dictionary }) {
   const th = t.thesis;
   return (
-    <Reveal className="mt-14">
+    <Reveal className="mt-10">
       <article className="overflow-hidden rounded-3xl border border-line bg-surface/40">
         {/* Header */}
         <header className="relative border-b border-line p-6 sm:p-10">

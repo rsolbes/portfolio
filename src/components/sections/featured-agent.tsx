@@ -131,7 +131,7 @@ function AgentDiagram({ t }: { t: Dictionary }) {
 export function FeaturedAgent({ t }: { t: Dictionary }) {
   const fc = t.financeCoach;
   return (
-    <Reveal className="mt-10">
+    <Reveal className="mt-14">
       <article className="overflow-hidden rounded-3xl border border-line bg-surface/40">
         {/* Header */}
         <header className="relative border-b border-line p-6 sm:p-10">
